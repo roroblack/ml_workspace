@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3f49bda3-1e08-4e6e-9dec-a5b887947c87" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ml_data_preprocessing.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="20" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0006723382740528" />
+      <entry key="S2" value="1.3374846669454645" />
+      <entry key="S5" value="2.4286612145875535" />
+      <entry key="S10" value="3.3996113485271255" />
+      <entry key="S30" value="4.655628558251363" />
+      <entry key="S60" value="5.210771750507666" />
+      <entry key="M2" value="5.567753759981156" />
+      <entry key="M5" value="5.816690897402519" />
+      <entry key="M10" value="5.906479533109928" />
+      <entry key="M15" value="5.93722981209953" />
+      <entry key="M30" value="5.969772710136141" />
+      <entry key="H1" value="6.068583218294693" />
+      <entry key="H2" value="7.755323926336143" />
+      <entry key="H4" value="15.464746424136402" />
+      <entry key="D1" value="45.70598572020754" />
+      <entry key="W1" value="56.8563261320101" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="8.141680459186023E-189" />
+      <entry key="M2" value="9.023126098634566E-95" />
+      <entry key="M5" value="2.410698017209787E-38" />
+      <entry key="M10" value="1.5526422695552852E-19" />
+      <entry key="M15" value="2.8887786800746304E-13" />
+      <entry key="M30" value="5.374735974980196E-7" />
+      <entry key="H1" value="7.331259083527325E-4" />
+      <entry key="H2" value="0.02707629790707607" />
+      <entry key="H4" value="0.16454877060335654" />
+      <entry key="D1" value="0.7402568593260886" />
+      <entry key="W1" value="0.9579445007350307" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.7791645796604998" />
+      <entry key="MS500" value="0.9519583994272008" />
+      <entry key="S2" value="1.320514645744159" />
+      <entry key="S5" value="2.4153569088647213" />
+      <entry key="S10" value="3.3898224771859358" />
+      <entry key="S30" value="4.650674360550439" />
+      <entry key="S60" value="5.207836918375856" />
+      <entry key="M2" value="5.566128424710228" />
+      <entry key="M5" value="5.815995115312985" />
+      <entry key="M10" value="5.906123269210544" />
+      <entry key="M15" value="5.936990378815894" />
+      <entry key="M30" value="5.969651849660254" />
+      <entry key="H1" value="6.069243083703576" />
+      <entry key="H2" value="7.782293471983134" />
+      <entry key="H4" value="15.629102939127481" />
+      <entry key="D1" value="46.446123700904984" />
+      <entry key="W1" value="57.814249128046974" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3EHrGNONXUCf5pAfGdvew62GvL5" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.01_missing_values.executor": "Run",
+    "Python.02_outlier_iqr.executor": "Run",
+    "Python.03_outlier_zscore.executor": "Run",
+    "Python.04_minmax_scaling.executor": "Run",
+    "Python.ml_sample.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="pip install pandas numpy seaborn scikit-learn" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="01_missing_values" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ml_data_preprocessing" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/01_missing_values.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.01_missing_values" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-c59985aa861c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.24374.152" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="3f49bda3-1e08-4e6e-9dec-a5b887947c87" name="변경" comment="" />
+      <created>1779846239751</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779846239751</updated>
+      <workItem from="1779846240755" duration="14751000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ml_data_preprocessing$ml_sample.coverage" NAME="ml_sample 커버리지 결과" MODIFIED="1779866189888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_data_preprocessing$04_minmax_scaling.coverage" NAME="04_minmax_scaling 커버리지 결과" MODIFIED="1779849277586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_data_preprocessing$01_missing_values.coverage" NAME="01_missing_values 커버리지 결과" MODIFIED="1779848838494" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_data_preprocessing$02_outlier_iqr.coverage" NAME="02_outlier_iqr 커버리지 결과" MODIFIED="1779848856600" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_data_preprocessing$03_outlier_zscore.coverage" NAME="03_outlier_zscore 커버리지 결과" MODIFIED="1779849007108" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
