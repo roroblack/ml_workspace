@@ -1,0 +1,298 @@
+[ 실습 프로젝트 : 의사결정트리 정확도 향상 ]
+
+## 실습 목표
+현재 생성된 Decision Tree 모델의 성능을 분석하고 다양한 방법으로 정확도를 향상시켜 본다.
+
+# 문제 1. 현재 모델 성능 분석 ===============================
+현재 생성된 모델의 다음 성능지표를 출력하시오.
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* Confusion Matrix
+
+Accuracy : 0.725
+Precision : 0.7237047722081982
+Recall : 0.725
+F1 : 0.7243338616585424
+Confusion Matrix :
+[[113  27]
+ [ 28  32]]
+
+
+### 코드
+```
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
+
+acc = accuracy_score(y_test, predictions)
+
+prec = precision_score(
+    y_test,
+    predictions,
+    average='weighted'
+)
+
+rec = recall_score(
+    y_test,
+    predictions,
+    average='weighted'
+)
+
+f1 = f1_score(
+    y_test,
+    predictions,
+    average='weighted'
+)
+
+print("Accuracy :", acc)
+print("Precision :", prec)
+print("Recall :", rec)
+print("F1 :", f1)
+
+print(confusion_matrix(y_test,predictions))
+```
+
+### 질문에 대한 답을 작성하시오 : ---------------------------------------
+
+1. Accuracy의 의미는?
+
+전체 갯수 중에 맞춘 갯수 비율을 의미
+이전의 결과를 예로 들면 전체 데이터 중 72.5 프로는 정답을 맞췄다는 의미
+
+2. Precision과 Recall 차이는?
+
+각각 정밀도 와 재현율을 의미
+
+Precision 	: TP / (TP + FP)
+			정밀도 :
+			정답이라고 모델이 예측한 값 중 (정답과 정답으로 예측했는데 틀린 합)
+			에 진짜 정답 (1) 인 것이 얼마나 있느냐를 봄
+			여기서는 돈을 갚을 사람으로 예측한 사람들 중에 진짜 갚은 사람들의 비중
+
+Recall		: TP / (TP + FN)
+			재현율 :
+			맞춘 것과 정답인데도 오답이라고 한 것의 합에서 정답을 찾은 비율로
+			정답 검거율을 의미함
+			여기서는 갚을 수 있는 고객을 얼마나 찾았나를 의미
+			
+			
+
+3. 은행 대출 심사에서는 Recall이 중요한 이유는?
+
+대출을 해줘야 하는 우량고객인데 거절한 것까지 포함한 Recall 비율을 알면 실제 대출 상환률이 높은
+고객을 확보할 수 있는 것에 대한 좋은 지표가 되기 때문에 중요
+
+
+# 문제 2. max_depth 튜닝 ============================
+
+다음 값을 적용하여 정확도를 비교하시오.
+
+```python
+max_depth = 3
+max_depth = 5
+max_depth = 7
+max_depth = 10
+max_depth = None
+```
+
+### 코드
+```
+model = DecisionTreeClassifier(
+    max_depth=5,
+    random_state=42
+)
+```
+
+### 결과표에 정확도를 기록하시오. ----------------------------------------------
+
+| Depth | Accuracy |
+| -------- | --------------- |
+| 3        |         0.715
+| 5        |         
+| 7        |         
+| 10      |        
+| None  |        
+
+
+### 질문 ----------------------------------------------------------------
+깊이가 너무 크면 어떤 문제가 발생하는가? 답을 적으시오.
+
+
+# 문제 3. min_samples_split 실험 ====================================
+노드를 분할하기 위한 최소 샘플 수를 변경하시오.
+
+### 실험값
+```
+2
+5
+10
+20
+50
+```
+
+### 코드
+```
+DecisionTreeClassifier(
+    min_samples_split=10
+)
+```
+
+### 결과표를 작성하시오.
+
+| min_samples_split | Accuracy |
+| --------------- | -------- |
+| 2                 |         
+| 5                 |         
+| 10               |         
+| 20               |         
+| 50               |          
+
+
+### 질문 -------------------------------------------------
+값이 커질수록 트리는 어떻게 변하는가? (답안을 작성하시오.)
+
+
+
+# 문제 4. min_samples_leaf 실험 ======================================
+다음 값을 적용하여 비교하시오.
+
+```
+1
+5
+10
+20
+30
+```
+### 코드
+```
+DecisionTreeClassifier(
+    min_samples_leaf=10
+)
+```
+
+### 결과표를 작성하시오.
+
+| Leaf | Accuracy |
+| ---- | -------------- |
+| 1    |       
+| 5    |          
+| 10   |         
+| 20   |         
+| 30   |         
+
+
+### 질문
+Leaf 크기를 크게 하는 목적은? (답안을 작성하시오.)
+
+ 
+
+# 문제 5. Criterion 변경 ===============================================
+다음 두 가지를 비교하시오.
+
+```
+criterion='gini'
+```
+
+```
+criterion='entropy'
+```
+## 코드
+```
+DecisionTreeClassifier(
+    criterion='entropy'
+)
+```
+### 결과표를 작성하시오.
+| Criterion | Accuracy |
+| ----------- | ------------ |
+| gini      |         
+| entropy   |          
+
+## 질문 ------------------------------------------------
+Entropy와 Gini 차이는?
+
+ 
+
+# 문제 6. Feature Importance 분석
+
+가장 중요한 변수를 찾아라.
+
+### 코드
+```
+importance = model.feature_importances_
+```
+
+```
+for feature, score in zip(
+    feature_names,
+    importance
+):
+    print(feature, score)
+```
+
+---
+
+### 출력 예
+```
+checking_balance     0.41
+credit_amount        0.25
+duration             0.17
+...
+```
+### 질문 -----------------------------------------------
+가장 중요한 변수는 무엇인가?
+
+
+# 문제 7. 트리 시각화 ====================================
+생성된 트리를 시각화하시오.
+
+### 코드
+```python
+from sklearn.tree import plot_tree
+
+plt.figure(figsize=(20,10))
+
+plot_tree(
+    model,
+    feature_names=feature_names,
+    class_names=class_names,
+    filled=True
+)
+
+plt.show()
+```
+
+### 질문 ----------------------------------------------------------------
+루트 노드가 의미하는 것은?
+
+ 
+# 문제 8. 데이터 전처리 개선 ==========================================
+One-Hot Encoding 적용 전후 성능을 비교하시오.
+
+### 기존
+```
+LabelEncoder
+```
+### 변경
+```
+pd.get_dummies()
+```
+또는
+```python
+OneHotEncoder()
+```
+### 결과표
+
+| Encoding             | Accuracy |
+| ---------------------- | -------- 
+| LabelEncoder     |          
+| OneHotEncoder |         
+
+### 질문 -------------------------------------------------
+One-Hot Encoding이 유리한 이유는?
+
