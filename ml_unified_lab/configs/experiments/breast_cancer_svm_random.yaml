@@ -1,0 +1,19 @@
+experiment_name: breast_cancer_svm_random
+dataset: breast_cancer
+model: svm
+framework: sklearn
+task: classification
+search:
+  method: random
+  trials: 12
+  params:
+    C: [0.1, 1.0, 10.0, 100.0]
+    kernel: [rbf, linear]
+    gamma: [scale, auto]
+train:
+  test_size: 0.2
+  random_state: 42
+evaluation:
+  primary_metric: f1
+  plots:
+    - confusion_matrix

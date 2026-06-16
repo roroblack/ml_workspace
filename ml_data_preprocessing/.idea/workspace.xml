@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f49bda3-1e08-4e6e-9dec-a5b887947c87" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/../from_colab/0528-s/서울지하철이용자수예측회귀모델_tuned-2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../from_colab/0528-s/서울지하철이용자수예측회귀모델_tuned-2.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../from_colab_deep_learning/0608-s/heart_pytorch_dnn_실습문제.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../from_colab_deep_learning/0608-s/heart_pytorch_dnn_실습문제.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,8 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="21" />
-    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+    <option name="cachedIndexableFilesCount" value="22" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -25,12 +24,12 @@
     &quot;assignee&quot;: &quot;roroblack&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/roroblack/ml_workspace.git&quot;,
-    &quot;accountId&quot;: &quot;e7ffdcb5-e804-4d63-8c26-b8f6f7528be9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/roroblack/ml_workspace",
+    "accountId": "e7ffdcb5-e804-4d63-8c26-b8f6f7528be9"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -103,31 +102,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.01_missing_values.executor": "Run",
-    "Python.02_outlier_iqr.executor": "Run",
-    "Python.03_outlier_zscore.executor": "Run",
-    "Python.04_minmax_scaling.executor": "Run",
-    "Python.ml_sample.executor": "Run",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "nb1",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.01_missing_values.executor&quot;: &quot;Run&quot;,
+    &quot;Python.02_outlier_iqr.executor&quot;: &quot;Run&quot;,
+    &quot;Python.03_outlier_zscore.executor&quot;: &quot;Run&quot;,
+    &quot;Python.04_minmax_scaling.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ml_sample.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;nb1&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="pip install pandas numpy seaborn scikit-learn" />
@@ -180,6 +179,7 @@
       <option name="presentableId" value="Default" />
       <updated>1779846239751</updated>
       <workItem from="1779846240755" duration="15454000" />
+      <workItem from="1781492689769" duration="608000" />
     </task>
     <servers />
   </component>

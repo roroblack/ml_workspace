@@ -1,0 +1,18 @@
+experiment_name: iris_logistic_grid
+dataset: iris
+model: logistic_regression
+framework: sklearn
+task: classification
+search:
+  method: grid
+  params:
+    C: [0.1, 1.0, 10.0]
+    solver: [lbfgs]
+train:
+  test_size: 0.2
+  random_state: 42
+evaluation:
+  primary_metric: accuracy
+  plots:
+    - confusion_matrix
+

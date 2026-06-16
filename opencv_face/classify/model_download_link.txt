@@ -1,0 +1,22 @@
+■ 미리 학습된 GoogLeNet 학습 모델 및 구성 파일 다운로드
+
+- 모델 파일
+  http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
+
+- 구성 파일
+  https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet 에서 deploy.prototxt 파일 다운로드
+
+- 클래스 이름 파일(1~1000 번 클래스에 대한 설명을 저장한 텍스트 파일)
+  https://github.com/opencv/opencv/blob/4.1.0/samples/data/dnn/classification_classes_ILSVRC2012.txt
+ 
+ 미리 학습된 GoogLeNet 학습 모델 및 구성 파일 다운로드
+ Model Zoo에서 미리 학습되어진 파일을 다운받았습니다.
+
+ Model Zoo는 model의 framework가 미리 학습되어진 파일을 모아둔 커뮤니티 입니다. 
+  Caffe Model Zoo : github.com/BVLC/caffe
+
+모델 파일 : dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
+
+설정 파일 : github.com/BVLC/caffe/blob/master/models/bvlc_googlenet/deploy.prototxt
+
+클래스 이름 파일 : github.com/opencv/opencv/blob/4.1.0/samples/data/dnn/classification_classes_ILSVRC2012.txt

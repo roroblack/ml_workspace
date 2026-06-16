@@ -1,0 +1,19 @@
+experiment_name: concrete_gbr_grid
+dataset: concrete
+model: gradient_boosting
+framework: sklearn
+task: regression
+search:
+  method: grid
+  params:
+    n_estimators: [100, 200]
+    learning_rate: [0.05, 0.1]
+    max_depth: [2, 3]
+train:
+  test_size: 0.2
+  random_state: 42
+evaluation:
+  primary_metric: rmse
+  plots:
+    - residual_plot
+    - prediction_scatter

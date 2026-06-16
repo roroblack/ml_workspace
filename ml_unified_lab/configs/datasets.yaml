@@ -1,0 +1,41 @@
+datasets:
+  iris:
+    task: classification
+    source: sklearn
+  wine:
+    task: classification
+    source: sklearn_or_notebook
+  breast_cancer:
+    task: classification
+    source: sklearn_or_csv
+  titanic:
+    task: classification
+    source: archive/raw_workspace/from_colab/0528_data/titanic
+  subway:
+    task: regression
+    source: archive/raw_workspace/from_colab/0528_data/subway
+  concrete:
+    task: regression
+    source: archive/raw_workspace/from_colab/0602-s/concrete_stg.csv
+  heart:
+    task: classification
+    source: archive/raw_workspace/from_colab_deep_learning/0608-s/heart.csv
+  housing:
+    task: regression
+    source: archive/raw_workspace/from_colab_deep_learning/0608-s/housing.csv
+  mnist:
+    task: classification
+    source: torchvision
+  fashion_mnist:
+    task: classification
+    source: torchvision
+  cifar10:
+    task: classification
+    source: torchvision_or_archive
+  online_retail:
+    task: association_rules
+    source: archive/raw_workspace/from_colab/0605-s/online+retail.zip
+  groceries:
+    task: association_rules
+    source: archive/raw_workspace/from_colab/0605-s/shop_groceries.csv
+

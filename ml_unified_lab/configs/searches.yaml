@@ -1,0 +1,12 @@
+searches:
+  none:
+    type: single_run
+  grid:
+    type: exhaustive
+  random:
+    type: sampled
+    default_trials: 20
+  bayesian:
+    type: optuna
+    default_trials: 30
+

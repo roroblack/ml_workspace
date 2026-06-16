@@ -1,0 +1,27 @@
+experiment_name: cifar10_cnn_optuna
+dataset: cifar10
+model: cnn_basic
+framework: torch
+task: image_classification
+search:
+  method: bayesian          # Optuna(TPE). optuna 미설치 시 random으로 자동 폴백
+  trials: 4
+  params:
+    lr: [0.0005, 0.001, 0.003]
+    batch_size: [64, 128]
+    optimizer: [adam, adamw]
+train:
+  epochs: 3
+  batch_size: 64
+  lr: 0.001
+  optimizer: adamw
+  random_state: 42
+  # CPU에서 탐색을 빠르게 돌리기 위한 서브샘플링. GPU/전체 학습 시 두 줄을 제거하세요.
+  max_train_samples: 8000
+  max_test_samples: 2000
+evaluation:
+  primary_metric: accuracy
+  plots:
+    - loss_curve
+    - accuracy_curve
+    - confusion_matrix

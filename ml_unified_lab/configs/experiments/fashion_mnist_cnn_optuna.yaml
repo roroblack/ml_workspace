@@ -1,0 +1,26 @@
+experiment_name: fashion_mnist_cnn_optuna
+dataset: fashion_mnist
+model: cnn_basic
+framework: torch
+task: image_classification
+search:
+  method: bayesian          # Optuna(TPE). optuna 미설치 시 random으로 자동 폴백
+  trials: 4
+  params:
+    lr: [0.0005, 0.001, 0.003]
+    optimizer: [adam, adamw]
+train:
+  epochs: 2
+  batch_size: 128
+  lr: 0.001
+  optimizer: adam
+  random_state: 42
+  # CPU에서 탐색을 빠르게 돌리기 위한 서브샘플링. GPU/전체 학습 시 두 줄을 제거하세요.
+  max_train_samples: 10000
+  max_test_samples: 2000
+evaluation:
+  primary_metric: accuracy
+  plots:
+    - loss_curve
+    - accuracy_curve
+    - confusion_matrix

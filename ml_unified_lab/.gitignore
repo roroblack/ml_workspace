@@ -1,0 +1,18 @@
+# 실험 실행 결과 (README.md만 추적)
+runs/*
+!runs/README.md
+
+# torchvision 다운로드 데이터 캐시 (MNIST/CIFAR 등, 수백 MB)
+runs/_data_cache/
+
+# 가상환경
+.venv/
+venv/
+
+# 파이썬 캐시
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 코드 편집기 백업 (GUI 코드 편집 탭)
+*.bak

@@ -1439,10 +1439,6 @@ DNN 학습 시작
    macro avg       1.00      1.00      1.00        30
 weighted avg       1.00      1.00      1.00        30
 
-/usr/local/lib/python3.12/dist-packages/sklearn/metrics/_classification.py:407: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
-  warnings.warn(
-
-
 
 
 결과를 보면 심장병 환자(1) 데이터만 앞쪽에 떼거지로 몰려있는 구간만을 따와서

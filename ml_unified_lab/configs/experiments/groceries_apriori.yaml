@@ -1,0 +1,13 @@
+experiment_name: groceries_apriori
+dataset: groceries
+model: apriori
+framework: special
+task: association_rules
+search:
+  method: apriori
+  params:
+    min_support: 0.01
+    min_confidence: 0.3
+    max_len: 2
+evaluation:
+  primary_metric: n_rules

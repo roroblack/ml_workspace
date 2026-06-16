@@ -1,0 +1,21 @@
+experiment_name: housing_dnn_random
+dataset: housing
+model: dnn
+framework: torch
+task: regression
+search:
+  method: random
+  trials: 15
+  params:
+    lr: [0.0001, 0.001, 0.01]
+    batch_size: [16, 32, 64]
+    hidden_units: [64, 128, 256]
+train:
+  epochs: 50
+  optimizer: adam
+evaluation:
+  primary_metric: rmse
+  plots:
+    - loss_curve
+    - prediction_scatter
+

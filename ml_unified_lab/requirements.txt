@@ -1,0 +1,22 @@
+# 핵심 (sklearn 실험 실행에 필수)
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+scipy
+pyyaml
+joblib
+
+# 딥러닝 실험(torch/vision)에 필요 (housing_dnn / cifar10_cnn / fashion_mnist_cnn)
+torch
+torchvision
+
+# 베이지안 탐색(Optuna). 미설치 시 random search로 자동 폴백
+optuna
+
+# GUI 대시보드 (streamlit run app.py)
+streamlit
+
+# online_retail(.xlsx) 연관규칙 데이터 로딩
+openpyxl

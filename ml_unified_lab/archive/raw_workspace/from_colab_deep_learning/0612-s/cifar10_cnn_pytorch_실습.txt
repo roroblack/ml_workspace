@@ -1,0 +1,1125 @@
+## 12. 성능 개선 실험 방향
+
+정확도를 더 높이려면 다음 항목을 실험할 수 있습니다.
+
+1. `EPOCHS`를 20 이상으로 늘립니다.
+2. `BATCH_SIZE`를 128로 변경해 봅니다.
+3. 합성곱 계층 수를 더 늘립니다.
+4. `AdamW`의 `LEARNING_RATE`를 `0.0005`, `0.0003` 등으로 조정합니다.
+5. `RandomRotation`, `ColorJitter` 같은 데이터 증강을 추가합니다.
+6. ResNet 같은 사전 정의 CNN 구조를 사용합니다.
+
+단, 모델이 복잡해질수록 학습 시간이 늘어나므로 GPU 사용을 권장합니다.
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+0. 초기 셋팅의 결과 값
+======================================================================================
+
+
+CIFAR10CNN(
+  (features): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (5): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU(inplace=True)
+    (7): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (8): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (9): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU(inplace=True)
+    (11): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (classifier): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=2048, out_features=256, bias=True)
+    (2): ReLU(inplace=True)
+    (3): Dropout(p=0.3, inplace=False)
+    (4): Linear(in_features=256, out_features=10, bias=True)
+  )
+)
+모델 출력 모양: torch.Size([1, 10])
+
+
+
+
+Epoch 1/5
+  batch 0200/0782 | loss: 1.5631
+  batch 0400/0782 | loss: 1.3938
+  batch 0600/0782 | loss: 1.3834
+train_loss: 1.5106 | train_acc: 44.51% | test_loss: 1.1357 | test_acc: 59.47%
+
+Epoch 2/5
+  batch 0200/0782 | loss: 1.2283
+  batch 0400/0782 | loss: 1.4039
+  batch 0600/0782 | loss: 1.0717
+train_loss: 1.1645 | train_acc: 58.33% | test_loss: 1.0751 | test_acc: 61.46%
+
+Epoch 3/5
+  batch 0200/0782 | loss: 1.2247
+  batch 0400/0782 | loss: 1.1615
+  batch 0600/0782 | loss: 0.9127
+train_loss: 1.0293 | train_acc: 63.41% | test_loss: 0.8848 | test_acc: 67.75%
+
+Epoch 4/5
+  batch 0200/0782 | loss: 0.9695
+  batch 0400/0782 | loss: 1.0249
+  batch 0600/0782 | loss: 0.6981
+train_loss: 0.8986 | train_acc: 68.23% | test_loss: 0.7561 | test_acc: 73.79%
+
+Epoch 5/5
+  batch 0200/0782 | loss: 0.9753
+  batch 0400/0782 | loss: 0.6380
+  batch 0600/0782 | loss: 0.8471
+train_loss: 0.8494 | train_acc: 70.10% | test_loss: 0.7505 | test_acc: 73.39%
+
+총 학습 시간: 106.0초
+
+
+
+최종 평가 손실: 0.7505
+최종 평가 정확도: 73.39%
+
+혼동행렬:
+[[749  15  90  17   9   5  10  11  76  18]
+ [ 14 922   3   1   0   4   4   1  22  29]
+ [ 50  10 679  34  44  53  97  23   5   5]
+ [ 21  14  97 485  41 187 108  24  12  11]
+ [ 11   2 127  54 617  43  73  63   9   1]
+ [ 11   5  66 153  25 674  22  39   0   5]
+ [  2   3  58  47  29  19 833   2   6   1]
+ [  8   5  54  22  53  81   8 759   3   7]
+ [ 53  23  15  12   1   6   7   4 873   6]
+ [ 40 134   5   6   1   8   8  10  40 748]]
+
+클래스별 정확도:
+airplane  :  74.90%
+automobile:  92.20%
+bird      :  67.90%
+cat       :  48.50%
+deer      :  61.70%
+dog       :  67.40%
+frog      :  83.30%
+horse     :  75.90%
+ship      :  87.30%
+truck     :  74.80%
+
+
+모델 가중치 저장 완료: cifar10_cnn_adamw.pth
+모델 가중치 불러오기 완료
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+1. EPOCHS 를 20 으로 수정
+======================================================================================
+
+실습 과정 :
+
+CIFAR10CNN(
+  (features): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (5): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU(inplace=True)
+    (7): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (8): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (9): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU(inplace=True)
+    (11): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (classifier): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=2048, out_features=256, bias=True)
+    (2): ReLU(inplace=True)
+    (3): Dropout(p=0.3, inplace=False)
+    (4): Linear(in_features=256, out_features=10, bias=True)
+  )
+)
+모델 출력 모양: torch.Size([1, 10])
+
+
+
+
+
+Epoch 1/20
+  batch 0200/0782 | loss: 1.3968
+  batch 0400/0782 | loss: 1.2344
+  batch 0600/0782 | loss: 1.0898
+train_loss: 1.4684 | train_acc: 46.17% | test_loss: 1.1350 | test_acc: 58.41%
+
+Epoch 2/20
+  batch 0200/0782 | loss: 1.0883
+  batch 0400/0782 | loss: 1.1093
+  batch 0600/0782 | loss: 1.2503
+train_loss: 1.1322 | train_acc: 59.35% | test_loss: 1.0035 | test_acc: 63.81%
+
+Epoch 3/20
+  batch 0200/0782 | loss: 1.1821
+  batch 0400/0782 | loss: 1.2297
+  batch 0600/0782 | loss: 0.7989
+train_loss: 1.0025 | train_acc: 64.54% | test_loss: 0.8507 | test_acc: 69.62%
+
+Epoch 4/20
+  batch 0200/0782 | loss: 0.8754
+  batch 0400/0782 | loss: 0.6587
+  batch 0600/0782 | loss: 0.8218
+train_loss: 0.8643 | train_acc: 69.61% | test_loss: 0.7339 | test_acc: 73.78%
+
+Epoch 5/20
+  batch 0200/0782 | loss: 0.9529
+  batch 0400/0782 | loss: 0.8076
+  batch 0600/0782 | loss: 1.0304
+train_loss: 0.8239 | train_acc: 71.05% | test_loss: 0.6858 | test_acc: 75.91%
+
+Epoch 6/20
+  batch 0200/0782 | loss: 0.6955
+  batch 0400/0782 | loss: 0.9497
+  batch 0600/0782 | loss: 0.7718
+train_loss: 0.7878 | train_acc: 72.19% | test_loss: 0.7019 | test_acc: 75.79%
+
+Epoch 7/20
+  batch 0200/0782 | loss: 0.7144
+  batch 0400/0782 | loss: 0.6849
+  batch 0600/0782 | loss: 0.6274
+train_loss: 0.7283 | train_acc: 74.59% | test_loss: 0.6334 | test_acc: 77.73%
+
+Epoch 8/20
+  batch 0200/0782 | loss: 0.5451
+  batch 0400/0782 | loss: 0.6920
+  batch 0600/0782 | loss: 0.6190
+train_loss: 0.7073 | train_acc: 75.10% | test_loss: 0.6198 | test_acc: 78.21%
+
+Epoch 9/20
+  batch 0200/0782 | loss: 0.4777
+  batch 0400/0782 | loss: 0.8892
+  batch 0600/0782 | loss: 0.7192
+train_loss: 0.6932 | train_acc: 75.94% | test_loss: 0.6109 | test_acc: 78.82%
+
+Epoch 10/20
+  batch 0200/0782 | loss: 0.8468
+  batch 0400/0782 | loss: 0.4815
+  batch 0600/0782 | loss: 1.0589
+train_loss: 0.6648 | train_acc: 76.73% | test_loss: 0.5868 | test_acc: 79.31%
+
+Epoch 11/20
+  batch 0200/0782 | loss: 0.5756
+  batch 0400/0782 | loss: 0.6722
+  batch 0600/0782 | loss: 0.5763
+train_loss: 0.6527 | train_acc: 77.27% | test_loss: 0.5770 | test_acc: 79.90%
+
+Epoch 12/20
+  batch 0200/0782 | loss: 0.7246
+  batch 0400/0782 | loss: 0.3858
+  batch 0600/0782 | loss: 0.5326
+train_loss: 0.6410 | train_acc: 77.75% | test_loss: 0.5791 | test_acc: 79.63%
+
+Epoch 13/20
+  batch 0200/0782 | loss: 0.4778
+  batch 0400/0782 | loss: 0.6212
+  batch 0600/0782 | loss: 0.8642
+train_loss: 0.6313 | train_acc: 77.85% | test_loss: 0.5634 | test_acc: 80.28%
+
+Epoch 14/20
+  batch 0200/0782 | loss: 0.5922
+  batch 0400/0782 | loss: 0.5185
+  batch 0600/0782 | loss: 0.7778
+train_loss: 0.6247 | train_acc: 78.07% | test_loss: 0.5654 | test_acc: 80.08%
+
+Epoch 15/20
+  batch 0200/0782 | loss: 0.6853
+  batch 0400/0782 | loss: 0.4964
+  batch 0600/0782 | loss: 0.8643
+train_loss: 0.6171 | train_acc: 78.56% | test_loss: 0.5585 | test_acc: 80.28%
+
+Epoch 16/20
+  batch 0200/0782 | loss: 0.5080
+  batch 0400/0782 | loss: 0.6586
+  batch 0600/0782 | loss: 0.4909
+train_loss: 0.6112 | train_acc: 78.74% | test_loss: 0.5574 | test_acc: 80.66%
+
+Epoch 17/20
+  batch 0200/0782 | loss: 0.3797
+  batch 0400/0782 | loss: 0.8509
+  batch 0600/0782 | loss: 0.8716
+train_loss: 0.6037 | train_acc: 78.98% | test_loss: 0.5521 | test_acc: 80.85%
+
+Epoch 18/20
+  batch 0200/0782 | loss: 0.5134
+  batch 0400/0782 | loss: 0.5835
+  batch 0600/0782 | loss: 0.4088
+train_loss: 0.6044 | train_acc: 78.83% | test_loss: 0.5535 | test_acc: 80.90%
+
+Epoch 19/20
+  batch 0200/0782 | loss: 0.8325
+  batch 0400/0782 | loss: 0.5987
+  batch 0600/0782 | loss: 0.4863
+train_loss: 0.6047 | train_acc: 78.83% | test_loss: 0.5503 | test_acc: 80.71%
+
+Epoch 20/20
+  batch 0200/0782 | loss: 0.4964
+  batch 0400/0782 | loss: 0.5237
+  batch 0600/0782 | loss: 0.9214
+train_loss: 0.5983 | train_acc: 79.19% | test_loss: 0.5526 | test_acc: 80.72%
+
+총 학습 시간: 1909.5초
+
+
+
+최종 평가 손실: 0.5526
+최종 평가 정확도: 80.72%
+
+혼동행렬:
+[[839  14  45   9  12   2   8   8  41  22]
+ [ 11 930   1   1   1   2   1   1   8  44]
+ [ 61   0 706  27  73  52  51  20   5   5]
+ [ 18   4  57 586  43 167  77  26  14   8]
+ [ 10   2  45  28 793  21  55  42   4   0]
+ [ 10   2  41 121  36 735  19  30   2   4]
+ [  4   2  40  35  12  11 887   5   3   1]
+ [ 15   1  30  14  44  47   3 841   0   5]
+ [ 54  21   5   6   2   4   5   3 891   9]
+ [ 30  65   2  10   1   1   4   6  17 864]]
+
+클래스별 정확도:
+airplane  :  83.90%
+automobile:  93.00%
+bird      :  70.60%
+cat       :  58.60%
+deer      :  79.30%
+dog       :  73.50%
+frog      :  88.70%
+horse     :  84.10%
+ship      :  89.10%
+truck     :  86.40%
+
+
+
+
+
+
+
+
+
+
+
+평가 지표	① 초기 세팅 (5 Epoch)	② 변경 세팅 (20 Epoch)	수치적 변화 격차
+최종 평가 정확도	73.39%	80.72%	+7.33%p (대폭 상승)
+최종 평가 손실 (Loss)	0.7505	0.5526	-0.1979 (안정적 감소)
+총 학습 시간	106.0초	1,909.5초	1,803.5초 폭증 (+1,701%)
+1 에포크당 평균 속도	약 21.2초	약 95.5초	에포크당 연산 속도 4.5배 저하
+
+
+
+클래스명 (Class)	5 Epoch 정확도	20 Epoch 정확도	격차 (Gap, %p)	딥러닝 내부 메커니즘 분석
+deer (사슴)	61.70%	79.30%	+17.60	🚀 최대 수혜: 뿔이나 다리 같은 얇은 선 형태 특징이 완전히 수렴함
+truck (트럭)	74.80%	86.40%	+11.60	🚀 대폭 상승: 일반 승용차(automobile)와의 미세한 각도 차이를 구분해냄
+cat (고양이)	48.50%	58.60%	+10.10	🔥 지옥 탈출: 마침내 50%의 통곡의 벽을 깨고 개(dog)와의 경계선을 인식 시작
+airplane (비행기)	74.90%	83.90%	+9.00	📈 안정적 상승 (새와 비행기의 몸체 질감 차이 학습)
+horse (말)	75.90%	84.10%	+8.20	📈 안정적 상승
+dog (개)	67.40%	73.50%	+6.10	📈 상승 (고양이에게 주던 점수를 뺏어옴)
+frog (개구리)	83.30%	88.70%	+5.40	📈 상승 (최상위권 안착)
+bird (새)	67.90%	70.60%	+2.70	📈 소폭 상승 (비행기와 혼동되던 노이즈 정정)
+ship (배)	87.30%	89.10%	+1.80	➖ 수렴 완료 단계 (배경이 바다라 원래 잘 맞춤)
+automobile (자동차)	92.20%	93.00%	+0.80	➖ 마스터 단계 (더 오를 곳이 없는 부동의 1위)
+
+
+
+
+에포크를 20회로 늘린 선택은 수학적으로 완벽한 신의 한 수였습니다. 전 클래스의 정확도가 조화롭게 상승하며 최종 80.72%라는 고성능 모델을 찍어냈습니다. 다만, 다음 실험을 하실 때는 반드시 코랩 메뉴에서 런타임 -> 런타임 유형 변경을 눌러 T4 GPU가 제대로 켜져 있는지 확인하세요. 지금 걸린 31분(1909초)의 지독한 병목은 다음 세션에서 GPU만 정상 작동하면 1분 30초 컷으로 끝날 연산
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+2. BATCH_SIZE 를 128 로 변경
+======================================================================================
+
+
+CIFAR10CNN(
+  (features): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (5): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU(inplace=True)
+    (7): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (8): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (9): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU(inplace=True)
+    (11): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (classifier): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=2048, out_features=256, bias=True)
+    (2): ReLU(inplace=True)
+    (3): Dropout(p=0.3, inplace=False)
+    (4): Linear(in_features=256, out_features=10, bias=True)
+  )
+)
+모델 출력 모양: torch.Size([1, 10])
+
+
+
+Epoch 1/5
+  batch 0200/0391 | loss: 1.3854
+train_loss: 1.5168 | train_acc: 44.34% | test_loss: 1.1552 | test_acc: 58.13%
+
+Epoch 2/5
+  batch 0200/0391 | loss: 1.2522
+train_loss: 1.1528 | train_acc: 58.55% | test_loss: 1.1560 | test_acc: 60.59%
+
+Epoch 3/5
+  batch 0200/0391 | loss: 1.1327
+train_loss: 1.0234 | train_acc: 63.63% | test_loss: 0.9289 | test_acc: 66.47%
+
+Epoch 4/5
+  batch 0200/0391 | loss: 1.0321
+train_loss: 0.8969 | train_acc: 68.43% | test_loss: 0.7999 | test_acc: 71.67%
+
+Epoch 5/5
+  batch 0200/0391 | loss: 0.7990
+train_loss: 0.8456 | train_acc: 70.08% | test_loss: 0.7601 | test_acc: 73.08%
+
+총 학습 시간: 98.4초
+
+
+최종 평가 손실: 0.7601
+최종 평가 정확도: 73.08%
+
+혼동행렬:
+[[813  19  46   7   5   1   4  16  62  27]
+ [ 21 923   0   1   0   1   1   4  10  39]
+ [ 84  11 636  14  63  72  42  53  12  13]
+ [ 41  25 100 382  40 251  56  62  24  19]
+ [ 31   4  99  25 584  41  27 170  18   1]
+ [ 23  11  54  70  24 708   8  85   7  10]
+ [ 16   7  76  51  45  32 741  19  11   2]
+ [ 17   3  30   7  20  53   0 853   7  10]
+ [ 60  29   5   1   0   4   1   6 878  16]
+ [ 51 117   3   1   0   2   2   7  27 790]]
+
+클래스별 정확도:
+airplane  :  81.30%
+automobile:  92.30%
+bird      :  63.60%
+cat       :  38.20%
+deer      :  58.40%
+dog       :  70.80%
+frog      :  74.10%
+horse     :  85.30%
+ship      :  87.80%
+truck     :  79.00%
+
+
+
+평가 지표	① 초기 세팅 (Batch 64)	② 변경 세팅 (Batch 128)	수치적 변화 격차
+총 학습 시간	106.0초	98.4초	7.6초 단축 (-7.17%)
+최종 평가 정확도	73.39%	73.08%	미세 하락 (-0.31%p)
+최종 평가 손실 (Loss)	0.7505	0.7601	미세 상승 (+0.0096)
+
+
+클래스명 (Class)	Batch 64 정확도	Batch 128 정확도	격차 (Gap, %p)	성향 분석 및 특징
+horse (말)	75.90%	85.30%	+9.40	📈 대폭 상승 (초원 등 배경 특징 지배적)
+airplane (비행기)	74.90%	81.30%	+6.40	📈 대폭 상승 (하늘 배경 특징 안정화)
+truck (트럭)	74.80%	79.00%	+4.20	📈 상승 (각진 형태 수렴)
+dog (개)	67.40%	70.80%	+3.40	📈 미세 상승
+ship (배)	87.30%	87.80%	+0.50	➖ 현상 유지
+automobile (자동차)	92.20%	92.30%	+0.10	➖ 최상위권 유지
+bird (새)	67.90%	63.60%	-4.30	📉 하락
+deer (사슴)	61.70%	58.40%	-3.30	📉 하락
+frog (개구리)	83.30%	74.10%	-9.20	📉 대폭 폭락 (디테일 정보 유실)
+cat (고양이)	48.50%	38.20%	-10.30	📉 최대 폭락 (고양이-개 오인 구역)
+
+
+
+배치 128 변경은 연산 효율을 높여 시간을 확실히 벌어다 주었지만, 거친 특징만 보려는 특성 때문에 고양이 vs 개와 같은 디테일 싸움에서 손해를 보며 전체 정확도가 0.3%p 정도 희생되는 트레이드 오프(Trade-off)가 발생
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+3. 합성곱 계층수를 더 늘리기
+======================================================================================
+
+
+CIFAR10CNN(
+  (features): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (5): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU(inplace=True)
+    (7): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (8): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (9): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU(inplace=True)
+    (11): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (12): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (13): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (14): ReLU(inplace=True)
+    (15): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (classifier): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=1024, out_features=256, bias=True)
+    (2): ReLU(inplace=True)
+    (3): Dropout(p=0.3, inplace=False)
+    (4): Linear(in_features=256, out_features=10, bias=True)
+  )
+)
+모델 출력 모양: torch.Size([1, 10])
+
+
+
+Epoch 1/5
+  batch 0200/0782 | loss: 1.6447
+  batch 0400/0782 | loss: 1.4610
+  batch 0600/0782 | loss: 1.3036
+train_loss: 1.3970 | train_acc: 48.97% | test_loss: 1.1218 | test_acc: 59.25%
+
+Epoch 2/5
+  batch 0200/0782 | loss: 0.9680
+  batch 0400/0782 | loss: 1.0537
+  batch 0600/0782 | loss: 1.0114
+train_loss: 1.0323 | train_acc: 63.32% | test_loss: 0.9163 | test_acc: 67.46%
+
+Epoch 3/5
+  batch 0200/0782 | loss: 0.9649
+  batch 0400/0782 | loss: 1.0685
+  batch 0600/0782 | loss: 1.0023
+train_loss: 0.8851 | train_acc: 69.07% | test_loss: 0.7904 | test_acc: 72.41%
+
+Epoch 4/5
+  batch 0200/0782 | loss: 0.6276
+  batch 0400/0782 | loss: 0.5378
+  batch 0600/0782 | loss: 0.5577
+train_loss: 0.7417 | train_acc: 74.38% | test_loss: 0.6793 | test_acc: 76.19%
+
+Epoch 5/5
+  batch 0200/0782 | loss: 0.9983
+  batch 0400/0782 | loss: 0.5844
+  batch 0600/0782 | loss: 0.8570
+train_loss: 0.6911 | train_acc: 76.11% | test_loss: 0.6252 | test_acc: 78.06%
+
+총 학습 시간: 951.7초
+
+
+최종 평가 손실: 0.6252
+최종 평가 정확도: 78.06%
+
+혼동행렬:
+[[742  21  67  20  34   2   9  16  55  34]
+ [  3 932   1   3   3   1   2   3   8  44]
+ [ 47   3 674  45  86  44  58  28   6   9]
+ [  7  10  68 578  84 141  64  22  11  15]
+ [  7   2  43  28 845  12  24  32   7   0]
+ [  6   3  48 165  67 657  14  35   2   3]
+ [  4   3  46  50  40  12 835   4   4   2]
+ [  5   2  28  35  72  35   4 809   2   8]
+ [ 52  27   8  13  11   1   5   2 868  13]
+ [ 23  70   5   8   4   3   2   4  15 866]]
+
+클래스별 정확도:
+airplane  :  74.20%
+automobile:  93.20%
+bird      :  67.40%
+cat       :  57.80%
+deer      :  84.50%
+dog       :  65.70%
+frog      :  83.50%
+horse     :  80.90%
+ship      :  86.80%
+truck     :  86.60%
+
+
+
+
+
+
+
+Epoch	Train Loss	Train Acc	Test Loss	Test Acc
+1	1.3970	48.97%	1.1218	59.25%
+2	1.0323	63.32%	0.9163	67.46%
+3	0.8851	69.07%	0.7904	72.41%
+4	0.7417	74.38%	0.6793	76.19%
+5	0.6911	76.11%	0.6252	78.06%
+
+클래스별 정확도
+클래스	정확도	막대
+automobile	93.20%	
+ship	86.80%	
+truck	86.60%	
+deer	84.50%	
+frog	83.50%	
+horse	80.90%	
+airplane	74.20%	
+bird	67.40%	
+dog	65.70%	
+cat	57.80%	
+
+
+혼동행렬 분석 (주요 오분류)
+cat ↔ dog: 고양이를 개로 141회, 개를 고양이로 165회 오분류 → 가장 큰 혼동 쌍
+cat (57.8%): 모든 클래스 중 가장 낮음. 새·사슴·개와도 폭넓게 혼동됨
+dog (65.7%): 고양이(165) 외에 사슴(67)과도 혼동
+automobile (93.2%): 가장 안정적. truck과만 일부(44) 혼동
+
+
+
+
+분석 :
+
+정확도 상승과 학습속도의 증가를 확인. (지금은 cpu 로 변경되서 느림을 확인.)
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+4. `AdamW`의 `LEARNING_RATE`를 `0.0005`, `0.0003` 등으로 조정
+======================================================================================
+
+
+
+
+
+0.0005 인 경우
+
+
+
+CIFAR10CNN(
+  (features): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (5): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): ReLU(inplace=True)
+    (7): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (8): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (9): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): ReLU(inplace=True)
+    (11): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  )
+  (classifier): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=2048, out_features=256, bias=True)
+    (2): ReLU(inplace=True)
+    (3): Dropout(p=0.3, inplace=False)
+    (4): Linear(in_features=256, out_features=10, bias=True)
+  )
+)
+모델 출력 모양: torch.Size([1, 10])
+
+
+Epoch 1/5
+  batch 0200/0782 | loss: 1.4302
+  batch 0400/0782 | loss: 1.3232
+  batch 0600/0782 | loss: 1.1510
+train_loss: 1.4710 | train_acc: 46.10% | test_loss: 1.0921 | test_acc: 60.46%
+
+Epoch 2/5
+  batch 0200/0782 | loss: 1.1045
+  batch 0400/0782 | loss: 1.2038
+  batch 0600/0782 | loss: 1.2760
+train_loss: 1.1312 | train_acc: 59.21% | test_loss: 1.0220 | test_acc: 63.78%
+
+Epoch 3/5
+  batch 0200/0782 | loss: 1.1726
+  batch 0400/0782 | loss: 1.1445
+  batch 0600/0782 | loss: 0.7806
+train_loss: 1.0008 | train_acc: 64.29% | test_loss: 0.9170 | test_acc: 67.39%
+
+Epoch 4/5
+  batch 0200/0782 | loss: 0.8559
+  batch 0400/0782 | loss: 0.7466
+  batch 0600/0782 | loss: 0.8810
+train_loss: 0.8802 | train_acc: 68.70% | test_loss: 0.7605 | test_acc: 72.67%
+
+Epoch 5/5
+  batch 0200/0782 | loss: 0.8161
+  batch 0400/0782 | loss: 0.8488
+  batch 0600/0782 | loss: 1.1859
+train_loss: 0.8382 | train_acc: 70.46% | test_loss: 0.7300 | test_acc: 74.35%
+
+총 학습 시간: 799.8초
+
+
+최종 평가 손실: 0.7300
+최종 평가 정확도: 74.35%
+
+혼동행렬:
+[[728  31  74  17   7   7   6   8  65  57]
+ [  7 876   2   4   1   2   3   1  11  93]
+ [ 55   7 673  37  51  66  65  18  10  18]
+ [ 11   9  88 532  40 191  66  19  13  31]
+ [ 19   5 103  52 617  37  64  84  13   6]
+ [ 10   1  68 155  30 677  15  28   2  14]
+ [  6   4  53  53  25  18 826   4   5   6]
+ [ 13   3  60  27  25  73   2 764   4  29]
+ [ 52  33   9   9   1   5   2   2 839  48]
+ [  8  56   4   7   0   1   4   2  15 903]]
+
+클래스별 정확도:
+airplane  :  72.80%
+automobile:  87.60%
+bird      :  67.30%
+cat       :  53.20%
+deer      :  61.70%
+dog       :  67.70%
+frog      :  82.60%
+horse     :  76.40%
+ship      :  83.90%
+truck     :  90.30%
+
+
+
+
+
+0.0003
+
+
+
+
+
+Epoch 1/5
+  batch 0200/0782 | loss: 1.5419
+  batch 0400/0782 | loss: 1.4160
+  batch 0600/0782 | loss: 1.3163
+train_loss: 1.4989 | train_acc: 45.06% | test_loss: 1.1505 | test_acc: 58.50%
+
+Epoch 2/5
+  batch 0200/0782 | loss: 1.2003
+  batch 0400/0782 | loss: 1.3881
+  batch 0600/0782 | loss: 1.1185
+train_loss: 1.1528 | train_acc: 58.44% | test_loss: 1.0229 | test_acc: 64.03%
+
+Epoch 3/5
+  batch 0200/0782 | loss: 1.1834
+  batch 0400/0782 | loss: 1.0816
+  batch 0600/0782 | loss: 0.9987
+train_loss: 1.0249 | train_acc: 63.79% | test_loss: 0.9119 | test_acc: 67.69%
+
+Epoch 4/5
+  batch 0200/0782 | loss: 1.1103
+  batch 0400/0782 | loss: 1.0852
+  batch 0600/0782 | loss: 0.7224
+train_loss: 0.9079 | train_acc: 67.89% | test_loss: 0.8149 | test_acc: 71.71%
+
+Epoch 5/5
+  batch 0200/0782 | loss: 0.8259
+  batch 0400/0782 | loss: 0.8011
+  batch 0600/0782 | loss: 0.8702
+train_loss: 0.8698 | train_acc: 69.34% | test_loss: 0.7744 | test_acc: 72.84%
+
+총 학습 시간: 107.5초
+
+최종 평가 손실: 0.7744
+최종 평가 정확도: 72.84%
+
+혼동행렬:
+[[782  16  79  11  14   3   9   6  59  21]
+ [ 25 908   2   4   0   1  10   2  18  30]
+ [ 60   4 655  31  61  50 104  18   8   9]
+ [ 21  20  90 497  38 159 132  23  11   9]
+ [ 23   5 109  40 604  32 118  58   8   3]
+ [ 16   2  66 159  29 638  44  32   3  11]
+ [  5   3  40  36  19  11 881   2   3   0]
+ [ 14   4  67  31  59  72  18 726   3   6]
+ [ 68  27  15  13   5   6  10   0 848   8]
+ [ 53 128   9   8   4   1  13   2  37 745]]
+
+클래스별 정확도:
+airplane  :  78.20%
+automobile:  90.80%
+bird      :  65.50%
+cat       :  49.70%
+deer      :  60.40%
+dog       :  63.80%
+frog      :  88.10%
+horse     :  72.60%
+ship      :  84.80%
+truck     :  74.50%
+
+
+0.0003 에 epoch 20
+
+
+Epoch 1/20
+  batch 0200/0782 | loss: 1.5420
+  batch 0400/0782 | loss: 1.4259
+  batch 0600/0782 | loss: 1.2878
+train_loss: 1.4986 | train_acc: 44.99% | test_loss: 1.1508 | test_acc: 58.96%
+
+Epoch 2/20
+  batch 0200/0782 | loss: 1.2226
+  batch 0400/0782 | loss: 1.3910
+  batch 0600/0782 | loss: 1.1375
+train_loss: 1.1531 | train_acc: 58.52% | test_loss: 1.0305 | test_acc: 63.69%
+
+Epoch 3/20
+  batch 0200/0782 | loss: 1.1955
+  batch 0400/0782 | loss: 1.1447
+  batch 0600/0782 | loss: 0.9972
+train_loss: 1.0262 | train_acc: 63.70% | test_loss: 0.8818 | test_acc: 68.74%
+
+Epoch 4/20
+  batch 0200/0782 | loss: 1.0773
+  batch 0400/0782 | loss: 1.0991
+  batch 0600/0782 | loss: 0.6937
+train_loss: 0.9112 | train_acc: 67.69% | test_loss: 0.8110 | test_acc: 71.93%
+
+Epoch 5/20
+  batch 0200/0782 | loss: 0.8759
+  batch 0400/0782 | loss: 0.7689
+  batch 0600/0782 | loss: 0.8852
+train_loss: 0.8721 | train_acc: 69.30% | test_loss: 0.7763 | test_acc: 72.52%
+
+Epoch 6/20
+  batch 0200/0782 | loss: 0.9115
+  batch 0400/0782 | loss: 1.0043
+  batch 0600/0782 | loss: 1.0649
+train_loss: 0.8392 | train_acc: 70.38% | test_loss: 0.7368 | test_acc: 73.89%
+
+Epoch 7/20
+  batch 0200/0782 | loss: 0.8846
+  batch 0400/0782 | loss: 0.8094
+  batch 0600/0782 | loss: 0.7187
+train_loss: 0.7901 | train_acc: 72.24% | test_loss: 0.6927 | test_acc: 75.50%
+
+Epoch 8/20
+  batch 0200/0782 | loss: 0.8652
+  batch 0400/0782 | loss: 0.5327
+  batch 0600/0782 | loss: 0.8295
+train_loss: 0.7702 | train_acc: 72.82% | test_loss: 0.6874 | test_acc: 75.86%
+
+Epoch 9/20
+  batch 0200/0782 | loss: 0.5822
+  batch 0400/0782 | loss: 0.6995
+  batch 0600/0782 | loss: 0.9018
+train_loss: 0.7614 | train_acc: 73.37% | test_loss: 0.6937 | test_acc: 75.30%
+
+Epoch 10/20
+  batch 0200/0782 | loss: 0.7867
+  batch 0400/0782 | loss: 0.6078
+  batch 0600/0782 | loss: 0.6670
+train_loss: 0.7335 | train_acc: 74.25% | test_loss: 0.6527 | test_acc: 77.17%
+
+Epoch 11/20
+  batch 0200/0782 | loss: 0.8039
+  batch 0400/0782 | loss: 0.6571
+  batch 0600/0782 | loss: 0.9226
+train_loss: 0.7266 | train_acc: 74.39% | test_loss: 0.6460 | test_acc: 77.35%
+
+Epoch 12/20
+  batch 0200/0782 | loss: 0.8032
+  batch 0400/0782 | loss: 0.8655
+  batch 0600/0782 | loss: 0.6896
+train_loss: 0.7165 | train_acc: 74.89% | test_loss: 0.6405 | test_acc: 77.76%
+
+Epoch 13/20
+  batch 0200/0782 | loss: 0.7708
+  batch 0400/0782 | loss: 0.6833
+  batch 0600/0782 | loss: 0.7747
+train_loss: 0.7106 | train_acc: 75.20% | test_loss: 0.6393 | test_acc: 77.39%
+
+Epoch 14/20
+  batch 0200/0782 | loss: 0.9191
+  batch 0400/0782 | loss: 0.6552
+  batch 0600/0782 | loss: 0.6154
+train_loss: 0.7005 | train_acc: 75.64% | test_loss: 0.6350 | test_acc: 77.65%
+
+Epoch 15/20
+  batch 0200/0782 | loss: 0.7097
+  batch 0400/0782 | loss: 0.5972
+  batch 0600/0782 | loss: 0.7489
+train_loss: 0.6983 | train_acc: 75.73% | test_loss: 0.6354 | test_acc: 77.70%
+
+Epoch 16/20
+  batch 0200/0782 | loss: 0.6204
+  batch 0400/0782 | loss: 0.6143
+  batch 0600/0782 | loss: 0.6520
+train_loss: 0.6951 | train_acc: 75.70% | test_loss: 0.6267 | test_acc: 78.19%
+
+Epoch 17/20
+  batch 0200/0782 | loss: 0.7083
+  batch 0400/0782 | loss: 0.7991
+  batch 0600/0782 | loss: 0.7029
+train_loss: 0.6919 | train_acc: 75.84% | test_loss: 0.6282 | test_acc: 78.02%
+
+Epoch 18/20
+  batch 0200/0782 | loss: 0.5995
+  batch 0400/0782 | loss: 0.5988
+  batch 0600/0782 | loss: 0.6686
+train_loss: 0.6906 | train_acc: 75.92% | test_loss: 0.6301 | test_acc: 77.77%
+
+Epoch 19/20
+  batch 0200/0782 | loss: 0.6592
+  batch 0400/0782 | loss: 0.7803
+  batch 0600/0782 | loss: 0.5704
+train_loss: 0.6857 | train_acc: 76.06% | test_loss: 0.6264 | test_acc: 78.03%
+
+Epoch 20/20
+  batch 0200/0782 | loss: 0.7843
+  batch 0400/0782 | loss: 0.8523
+  batch 0600/0782 | loss: 0.5962
+train_loss: 0.6870 | train_acc: 76.03% | test_loss: 0.6261 | test_acc: 78.07%
+
+총 학습 시간: 429.8초
+
+최종 평가 손실: 0.6261
+최종 평가 정확도: 78.07%
+
+혼동행렬:
+[[816  14  45  13  14   4   9   8  43  34]
+ [ 20 890   1   7   0   3   4   2   8  65]
+ [ 61   3 675  29  81  57  59  20   5  10]
+ [ 21   2  69 564  50 177  74  21   8  14]
+ [ 17   4  54  39 737  33  55  55   6   0]
+ [ 11   1  31 139  39 727  19  27   1   5]
+ [  3   3  39  44   7  20 879   3   2   0]
+ [ 11   4  48  24  53  56   4 795   1   4]
+ [ 65  27   9  11   4   3   4   2 857  18]
+ [ 29  50   3  10   2   1   8   9  21 867]]
+
+클래스별 정확도:
+airplane  :  81.60%
+automobile:  89.00%
+bird      :  67.50%
+cat       :  56.40%
+deer      :  73.70%
+dog       :  72.70%
+frog      :  87.90%
+horse     :  79.50%
+ship      :  85.70%
+truck     :  86.70%
+
+
+
+
+분석 : 
+
+성능감소가 일어남을 확인
+lr 폭이 감소함에 따라 epoch 의 수를 늘려주어야 과적합이 일어나는 영역이 멀어지며 성능이 향상될 것인데
+같은 epoch 로 학습을 수행하기에 실질적인 성능의 향상을 관측하기는 무리가 있었음
+
+이후 20 에포크를 수행
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+5. `RandomRotation`, `ColorJitter` 같은 데이터 증강을 추가합니다.
+======================================================================================
+
+
+
+Epoch 1/5
+  batch 0200/0782 | loss: 1.5870
+  batch 0400/0782 | loss: 1.4684
+  batch 0600/0782 | loss: 1.3661
+train_loss: 1.6295 | train_acc: 39.89% | test_loss: 1.2262 | test_acc: 55.94%
+
+Epoch 2/5
+  batch 0200/0782 | loss: 1.4417
+  batch 0400/0782 | loss: 1.6450
+  batch 0600/0782 | loss: 1.2640
+train_loss: 1.3375 | train_acc: 51.45% | test_loss: 1.0920 | test_acc: 60.97%
+
+Epoch 3/5
+  batch 0200/0782 | loss: 1.3451
+  batch 0400/0782 | loss: 1.3373
+  batch 0600/0782 | loss: 1.1818
+train_loss: 1.2103 | train_acc: 56.87% | test_loss: 0.9904 | test_acc: 64.61%
+
+Epoch 4/5
+  batch 0200/0782 | loss: 1.2325
+  batch 0400/0782 | loss: 0.9677
+  batch 0600/0782 | loss: 0.9857
+train_loss: 1.0691 | train_acc: 61.84% | test_loss: 0.8425 | test_acc: 70.22%
+
+Epoch 5/5
+  batch 0200/0782 | loss: 1.0215
+  batch 0400/0782 | loss: 0.9298
+  batch 0600/0782 | loss: 0.8607
+train_loss: 1.0207 | train_acc: 63.70% | test_loss: 0.8135 | test_acc: 70.38%
+
+총 학습 시간: 213.7초
+
+
+최종 평가 손실: 0.8135
+최종 평가 정확도: 70.38%
+
+혼동행렬:
+[[778  38  67  14   7   5   9  18  43  21]
+ [ 17 924   1   4   0   5   4   3  15  27]
+ [ 77   9 610  29  51  74 101  36   6   7]
+ [ 20  11  97 386  34 237 145  45  15  10]
+ [ 26   4  90  43 567  41  94 124   9   2]
+ [ 11   9  69 116  30 651  35  72   4   3]
+ [  9  10  47  32  21  15 852   8   4   2]
+ [ 13   5  60  15  29  77   7 782   3   9]
+ [ 94  43  12  12   2   8   6   4 799  20]
+ [ 29 207   4   6   4   4   7  26  24 689]]
+
+클래스별 정확도:
+airplane  :  77.80%
+automobile:  92.40%
+bird      :  61.00%
+cat       :  38.60%
+deer      :  56.70%
+dog       :  65.10%
+frog      :  85.20%
+horse     :  78.20%
+ship      :  79.90%
+truck     :  68.90%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================
+6. ResNet 같은 사전 정의 CNN 구조를 사용합니다.
+======================================================================================
+
+

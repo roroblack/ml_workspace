@@ -1,0 +1,41 @@
+models:
+  logistic_regression:
+    framework: sklearn
+    task_types: [classification]
+  linear_regression:
+    framework: sklearn
+    task_types: [regression]
+  knn:
+    framework: sklearn
+    task_types: [classification, regression]
+  svm:
+    framework: sklearn
+    task_types: [classification, regression]
+  naive_bayes:
+    framework: sklearn
+    task_types: [classification]
+  decision_tree:
+    framework: sklearn
+    task_types: [classification, regression]
+  random_forest:
+    framework: sklearn
+    task_types: [classification, regression]
+  gradient_boosting:
+    framework: sklearn
+    task_types: [classification, regression]
+  mlp:
+    framework: torch
+    task_types: [classification, regression]
+  dnn:
+    framework: torch
+    task_types: [classification, regression]
+  cnn_basic:
+    framework: torch
+    task_types: [image_classification]
+  lstm:
+    framework: torch
+    task_types: [classification, regression, time_series]
+  apriori:
+    framework: special
+    task_types: [association_rules]
+
