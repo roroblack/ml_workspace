@@ -1,0 +1,123 @@
+// MySQL 운영 ERD v6 반영본
+// - face_user.user_id는 논리참조 기준이므로 user_id 컬럼에는 FK를 강제하지 않는다.
+// - 강제 FK: prediction_log.model_id, recommendation.model_id,
+//   retention_action_log.prediction_id, ensemble_member.ensemble_id
+// - 개선 반영: ensemble_member.model_id -> model_registry.model_id FK 권장 연결 포함
+
+Table model_registry {
+  model_id bigint [pk, increment]
+  model_name varchar(128) [not null, unique]
+  model_type varchar(32) [not null, note: 'tree|linear|sequence|ensemble']
+  feature_schema_version varchar(16) [default: 'v2']
+  preprocessing_config json [note: '서빙 전처리 분기 근거']
+  dataset_path text [note: '학습/검증 데이터 파일 경로']
+  artifact_path text [not null, note: '모델 파일 경로']
+  train_period varchar(64)
+  metric_cv double
+  metric_oot double
+  metrics_json json
+  is_active tinyint [default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table face_user {
+  user_id varchar(64) [pk, note: '고객/관리자 식별 기준, 논리참조']
+  display_name varchar(100)
+  role varchar(30)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table prediction_log {
+  prediction_id bigint [pk, increment]
+  model_id bigint [not null]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  session_id varchar(128)
+  churn_probability double [not null]
+  risk_level varchar(16) [not null]
+  top_factors_json json
+  recommended_action text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table feature_user_snapshot {
+  snapshot_id bigint [pk, increment]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  snapshot_time timestamp
+  cohort_flag tinyint
+  churn tinyint
+  churn_no_purchase tinyint
+  obs_period varchar(64)
+  outcome_period varchar(64)
+  feature_json json
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table sequence_snapshot {
+  snapshot_id bigint [pk, increment]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  dataset_tag varchar(32)
+  seq_len int
+  n_features int
+  storage_format varchar(16) [default: 'npz']
+  artifact_path text [note: 'npz 등 DB 밖 파일 경로']
+  row_index int
+  label int
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table user_interest {
+  user_id varchar(64) [pk, note: 'face_user.user_id logical ref']
+  top_category_id varchar(64)
+  top_brand varchar(128)
+  interest_json json
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table recommendation {
+  rec_id bigint [pk, increment]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  model_id bigint [not null]
+  rec_items_json json
+  rec_categories_json json
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table ensemble_result {
+  ensemble_id bigint [pk, increment]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  prob_ensemble double [not null]
+  risk_level varchar(16)
+  improvement_json json
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table ensemble_member {
+  member_id bigint [pk, increment]
+  ensemble_id bigint [not null]
+  model_id bigint [not null]
+  weight double
+  prob double
+}
+
+Table retention_action_log {
+  action_id bigint [pk, increment]
+  prediction_id bigint [not null]
+  action_type varchar(50)
+  message text
+  status varchar(30)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table face_login_log {
+  login_id bigint [pk, increment]
+  user_id varchar(64) [not null, note: 'face_user.user_id logical ref']
+  success tinyint
+  similarity double
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Ref: prediction_log.model_id > model_registry.model_id
+Ref: recommendation.model_id > model_registry.model_id
+Ref: retention_action_log.prediction_id > prediction_log.prediction_id
+Ref: ensemble_member.ensemble_id > ensemble_result.ensemble_id
+Ref: ensemble_member.model_id > model_registry.model_id

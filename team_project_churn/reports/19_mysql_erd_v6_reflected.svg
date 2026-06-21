@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2500" height="1700" viewBox="0 0 2500 1700">
+<rect width="2500" height="1700" fill="#fbfbfa"/>
+<style>text{font-family:"Malgun Gothic","Arial",sans-serif;fill:#1f2328}.muted{fill:#6b7280}.small{font-size:16px}.col{font-size:19px}.typ{font-size:17px}.head{font-size:24px;font-weight:700}.title{font-size:34px;font-weight:700}</style>
+<text x="60" y="68" class="title">MySQL 운영 ERD v6 - DDL 반영본</text>
+<text x="60" y="104" class="muted" font-size="19">실선=강제 FK, 점선=face_user.user_id 논리참조 / model_registry는 모델·전처리·파일 경로의 단일 기준</text>
+<polyline points="825,369 825,550 560,550 560,731" fill="none" stroke="#111827" stroke-width="4" stroke-linejoin="round"/>
+<text x="570" y="717" class="small">model_id FK</text>
+<polyline points="1345,369 1627,369 1627,255 1910,255" fill="none" stroke="#111827" stroke-width="4" stroke-linejoin="round"/>
+<text x="1920" y="241" class="small">model_id FK</text>
+<polyline points="310,917 875,917 875,1210 1440,1210" fill="none" stroke="#111827" stroke-width="4" stroke-linejoin="round"/>
+<text x="1450" y="1196" class="small">prediction_id FK</text>
+<polyline points="2160,840 2160,1007 2160,1007 2160,1175" fill="none" stroke="#111827" stroke-width="4" stroke-linejoin="round"/>
+<text x="2170" y="1161" class="small">ensemble_id FK</text>
+<polyline points="270,347 270,446 310,446 310,545" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="480,246 1195,246 1195,255 1910,255" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="270,347 570,347 570,655 870,655" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="270,347 855,347 855,655 1440,655" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="480,246 1195,246 1195,705 1910,705" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="270,347 270,783 860,783 860,1220" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="270,347 270,778 275,778 275,1210" fill="none" stroke="#b6c0cc" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 12"/>
+<polyline points="1345,547 1755,547 1755,1309 1910,1309" fill="none" stroke="#111827" stroke-width="4" stroke-linejoin="round"/>
+<text x="1765" y="1291" class="small">model_id FK 권장</text>
+<rect x="60" y="145" width="420" height="202" rx="16" fill="#fff" stroke="#7e57c2" stroke-width="3"/>
+<rect x="60" y="145" width="420" height="48" rx="16" fill="#e2daf1" stroke="#7e57c2" stroke-width="3"/>
+<line x1="60" y1="193" x2="480" y2="193" stroke="#7e57c2" stroke-width="3"/>
+<text x="270.0" y="177" text-anchor="middle" class="head">face_user</text>
+<rect x="78" y="203" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="98" y="221" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="130" y="227" class="col">user_id</text>
+<text x="295" y="227" class="typ">VARCHAR(64)</text>
+<text x="88" y="261" class="col">display_name</text>
+<text x="295" y="261" class="typ">VARCHAR(100)</text>
+<text x="88" y="295" class="col">role</text>
+<text x="295" y="295" class="typ">VARCHAR(30)</text>
+<text x="88" y="329" class="col">created_at</text>
+<text x="295" y="329" class="typ">TIMESTAMP</text>
+<rect x="825" y="115" width="520" height="508" rx="16" fill="#fff" stroke="#2e7d32" stroke-width="3"/>
+<rect x="825" y="115" width="520" height="48" rx="16" fill="#d1e2d1" stroke="#2e7d32" stroke-width="3"/>
+<line x1="825" y1="163" x2="1345" y2="163" stroke="#2e7d32" stroke-width="3"/>
+<text x="1085.0" y="147" text-anchor="middle" class="head">model_registry</text>
+<rect x="843" y="173" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="863" y="191" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="895" y="197" class="col">model_id</text>
+<text x="1160" y="197" class="typ">BIGINT</text>
+<rect x="843" y="207" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="863" y="225" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">UK</text>
+<text x="895" y="231" class="col">model_name</text>
+<text x="1160" y="231" class="typ">VARCHAR(128)</text>
+<text x="853" y="265" class="col">model_type</text>
+<text x="1160" y="265" class="typ">VARCHAR(32)</text>
+<text x="853" y="299" class="col">feature_schema_version</text>
+<text x="1160" y="299" class="typ">VARCHAR(16)</text>
+<text x="853" y="333" class="col">preprocessing_config</text>
+<text x="1160" y="333" class="typ">JSON</text>
+<text x="853" y="367" class="col">dataset_path</text>
+<text x="1160" y="367" class="typ">TEXT</text>
+<text x="853" y="401" class="col">artifact_path</text>
+<text x="1160" y="401" class="typ">TEXT</text>
+<text x="853" y="435" class="col">train_period</text>
+<text x="1160" y="435" class="typ">VARCHAR(64)</text>
+<text x="853" y="469" class="col">metric_cv</text>
+<text x="1160" y="469" class="typ">DOUBLE</text>
+<text x="853" y="503" class="col">metric_oot</text>
+<text x="1160" y="503" class="typ">DOUBLE</text>
+<text x="853" y="537" class="col">metrics_json</text>
+<text x="1160" y="537" class="typ">JSON</text>
+<text x="853" y="571" class="col">is_active</text>
+<text x="1160" y="571" class="typ">TINYINT(1)</text>
+<text x="853" y="605" class="col">created_at</text>
+<text x="1160" y="605" class="typ">TIMESTAMP</text>
+<rect x="1910" y="120" width="500" height="270" rx="16" fill="#fff" stroke="#b7791f" stroke-width="3"/>
+<rect x="1910" y="120" width="500" height="48" rx="16" fill="#efe1cd" stroke="#b7791f" stroke-width="3"/>
+<line x1="1910" y1="168" x2="2410" y2="168" stroke="#b7791f" stroke-width="3"/>
+<text x="2160.0" y="152" text-anchor="middle" class="head">recommendation</text>
+<rect x="1928" y="178" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="1948" y="196" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="1980" y="202" class="col">rec_id</text>
+<text x="2225" y="202" class="typ">BIGINT</text>
+<text x="1938" y="236" class="col">user_id</text>
+<text x="2225" y="236" class="typ">VARCHAR(64)</text>
+<rect x="1928" y="246" width="40" height="25" rx="8" fill="#8b5cf6"/>
+<text x="1948" y="264" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FK</text>
+<text x="1980" y="270" class="col">model_id</text>
+<text x="2225" y="270" class="typ">BIGINT</text>
+<text x="1938" y="304" class="col">rec_items_json</text>
+<text x="2225" y="304" class="typ">JSON</text>
+<text x="1938" y="338" class="col">rec_categories_json</text>
+<text x="2225" y="338" class="typ">JSON</text>
+<text x="1938" y="372" class="col">created_at</text>
+<text x="2225" y="372" class="typ">TIMESTAMP</text>
+<rect x="60" y="545" width="500" height="372" rx="16" fill="#fff" stroke="#2b6cb0" stroke-width="3"/>
+<rect x="60" y="545" width="500" height="48" rx="16" fill="#d0deed" stroke="#2b6cb0" stroke-width="3"/>
+<line x1="60" y1="593" x2="560" y2="593" stroke="#2b6cb0" stroke-width="3"/>
+<text x="310.0" y="577" text-anchor="middle" class="head">prediction_log</text>
+<rect x="78" y="603" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="98" y="621" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="130" y="627" class="col">prediction_id</text>
+<text x="375" y="627" class="typ">BIGINT</text>
+<rect x="78" y="637" width="40" height="25" rx="8" fill="#8b5cf6"/>
+<text x="98" y="655" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FK</text>
+<text x="130" y="661" class="col">model_id</text>
+<text x="375" y="661" class="typ">BIGINT</text>
+<text x="88" y="695" class="col">user_id</text>
+<text x="375" y="695" class="typ">VARCHAR(64)</text>
+<text x="88" y="729" class="col">session_id</text>
+<text x="375" y="729" class="typ">VARCHAR(128)</text>
+<text x="88" y="763" class="col">churn_probability</text>
+<text x="375" y="763" class="typ">DOUBLE</text>
+<text x="88" y="797" class="col">risk_level</text>
+<text x="375" y="797" class="typ">VARCHAR(16)</text>
+<text x="88" y="831" class="col">top_factors_json</text>
+<text x="375" y="831" class="typ">JSON</text>
+<text x="88" y="865" class="col">recommended_action</text>
+<text x="375" y="865" class="typ">TEXT</text>
+<text x="88" y="899" class="col">created_at</text>
+<text x="375" y="899" class="typ">TIMESTAMP</text>
+<rect x="610" y="655" width="520" height="406" rx="16" fill="#fff" stroke="#805ad5" stroke-width="3"/>
+<rect x="610" y="655" width="520" height="48" rx="16" fill="#e3daf5" stroke="#805ad5" stroke-width="3"/>
+<line x1="610" y1="703" x2="1130" y2="703" stroke="#805ad5" stroke-width="3"/>
+<text x="870.0" y="687" text-anchor="middle" class="head">feature_user_snapshot</text>
+<rect x="628" y="713" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="648" y="731" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="680" y="737" class="col">snapshot_id</text>
+<text x="945" y="737" class="typ">BIGINT</text>
+<text x="638" y="771" class="col">user_id</text>
+<text x="945" y="771" class="typ">VARCHAR(64)</text>
+<text x="638" y="805" class="col">snapshot_time</text>
+<text x="945" y="805" class="typ">TIMESTAMP</text>
+<text x="638" y="839" class="col">cohort_flag</text>
+<text x="945" y="839" class="typ">TINYINT(1)</text>
+<text x="638" y="873" class="col">churn</text>
+<text x="945" y="873" class="typ">TINYINT(1)</text>
+<text x="638" y="907" class="col">churn_no_purchase</text>
+<text x="945" y="907" class="typ">TINYINT(1)</text>
+<text x="638" y="941" class="col">obs_period</text>
+<text x="945" y="941" class="typ">VARCHAR(64)</text>
+<text x="638" y="975" class="col">outcome_period</text>
+<text x="945" y="975" class="typ">VARCHAR(64)</text>
+<text x="638" y="1009" class="col">feature_json</text>
+<text x="945" y="1009" class="typ">JSON</text>
+<text x="638" y="1043" class="col">created_at</text>
+<text x="945" y="1043" class="typ">TIMESTAMP</text>
+<rect x="1190" y="655" width="500" height="406" rx="16" fill="#fff" stroke="#6b7280" stroke-width="3"/>
+<rect x="1190" y="655" width="500" height="48" rx="16" fill="#dedfe3" stroke="#6b7280" stroke-width="3"/>
+<line x1="1190" y1="703" x2="1690" y2="703" stroke="#6b7280" stroke-width="3"/>
+<text x="1440.0" y="687" text-anchor="middle" class="head">sequence_snapshot</text>
+<rect x="1208" y="713" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="1228" y="731" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="1260" y="737" class="col">snapshot_id</text>
+<text x="1505" y="737" class="typ">BIGINT</text>
+<text x="1218" y="771" class="col">user_id</text>
+<text x="1505" y="771" class="typ">VARCHAR(64)</text>
+<text x="1218" y="805" class="col">dataset_tag</text>
+<text x="1505" y="805" class="typ">VARCHAR(32)</text>
+<text x="1218" y="839" class="col">seq_len</text>
+<text x="1505" y="839" class="typ">INT</text>
+<text x="1218" y="873" class="col">n_features</text>
+<text x="1505" y="873" class="typ">INT</text>
+<text x="1218" y="907" class="col">storage_format</text>
+<text x="1505" y="907" class="typ">VARCHAR(16)</text>
+<text x="1218" y="941" class="col">artifact_path</text>
+<text x="1505" y="941" class="typ">TEXT</text>
+<text x="1218" y="975" class="col">row_index</text>
+<text x="1505" y="975" class="typ">INT</text>
+<text x="1218" y="1009" class="col">label</text>
+<text x="1505" y="1009" class="typ">INT</text>
+<text x="1218" y="1043" class="col">created_at</text>
+<text x="1505" y="1043" class="typ">TIMESTAMP</text>
+<rect x="1910" y="570" width="500" height="270" rx="16" fill="#fff" stroke="#0f766e" stroke-width="3"/>
+<rect x="1910" y="570" width="500" height="48" rx="16" fill="#cae0df" stroke="#0f766e" stroke-width="3"/>
+<line x1="1910" y1="618" x2="2410" y2="618" stroke="#0f766e" stroke-width="3"/>
+<text x="2160.0" y="602" text-anchor="middle" class="head">ensemble_result</text>
+<rect x="1928" y="628" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="1948" y="646" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="1980" y="652" class="col">ensemble_id</text>
+<text x="2225" y="652" class="typ">BIGINT</text>
+<text x="1938" y="686" class="col">user_id</text>
+<text x="2225" y="686" class="typ">VARCHAR(64)</text>
+<text x="1938" y="720" class="col">prob_ensemble</text>
+<text x="2225" y="720" class="typ">DOUBLE</text>
+<text x="1938" y="754" class="col">risk_level</text>
+<text x="2225" y="754" class="typ">VARCHAR(16)</text>
+<text x="1938" y="788" class="col">improvement_json</text>
+<text x="2225" y="788" class="typ">JSON</text>
+<text x="1938" y="822" class="col">created_at</text>
+<text x="2225" y="822" class="typ">TIMESTAMP</text>
+<rect x="60" y="1210" width="430" height="236" rx="16" fill="#fff" stroke="#64748b" stroke-width="3"/>
+<rect x="60" y="1210" width="430" height="48" rx="16" fill="#dce0e5" stroke="#64748b" stroke-width="3"/>
+<line x1="60" y1="1258" x2="490" y2="1258" stroke="#64748b" stroke-width="3"/>
+<text x="275.0" y="1242" text-anchor="middle" class="head">face_login_log</text>
+<rect x="78" y="1268" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="98" y="1286" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="130" y="1292" class="col">login_id</text>
+<text x="305" y="1292" class="typ">BIGINT</text>
+<text x="88" y="1326" class="col">user_id</text>
+<text x="305" y="1326" class="typ">VARCHAR(64)</text>
+<text x="88" y="1360" class="col">success</text>
+<text x="305" y="1360" class="typ">TINYINT(1)</text>
+<text x="88" y="1394" class="col">similarity</text>
+<text x="305" y="1394" class="typ">DOUBLE</text>
+<text x="88" y="1428" class="col">created_at</text>
+<text x="305" y="1428" class="typ">TIMESTAMP</text>
+<rect x="610" y="1220" width="500" height="236" rx="16" fill="#fff" stroke="#c2410c" stroke-width="3"/>
+<rect x="610" y="1220" width="500" height="48" rx="16" fill="#f1d5c9" stroke="#c2410c" stroke-width="3"/>
+<line x1="610" y1="1268" x2="1110" y2="1268" stroke="#c2410c" stroke-width="3"/>
+<text x="860.0" y="1252" text-anchor="middle" class="head">user_interest</text>
+<rect x="628" y="1278" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="648" y="1296" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="680" y="1302" class="col">user_id</text>
+<text x="925" y="1302" class="typ">VARCHAR(64)</text>
+<text x="638" y="1336" class="col">top_category_id</text>
+<text x="925" y="1336" class="typ">VARCHAR(64)</text>
+<text x="638" y="1370" class="col">top_brand</text>
+<text x="925" y="1370" class="typ">VARCHAR(128)</text>
+<text x="638" y="1404" class="col">interest_json</text>
+<text x="925" y="1404" class="typ">JSON</text>
+<text x="638" y="1438" class="col">updated_at</text>
+<text x="925" y="1438" class="typ">TIMESTAMP</text>
+<rect x="1190" y="1210" width="500" height="270" rx="16" fill="#fff" stroke="#be123c" stroke-width="3"/>
+<rect x="1190" y="1210" width="500" height="48" rx="16" fill="#f0cad4" stroke="#be123c" stroke-width="3"/>
+<line x1="1190" y1="1258" x2="1690" y2="1258" stroke="#be123c" stroke-width="3"/>
+<text x="1440.0" y="1242" text-anchor="middle" class="head">retention_action_log</text>
+<rect x="1208" y="1268" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="1228" y="1286" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="1260" y="1292" class="col">action_id</text>
+<text x="1505" y="1292" class="typ">BIGINT</text>
+<rect x="1208" y="1302" width="40" height="25" rx="8" fill="#8b5cf6"/>
+<text x="1228" y="1320" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FK</text>
+<text x="1260" y="1326" class="col">prediction_id</text>
+<text x="1505" y="1326" class="typ">BIGINT</text>
+<text x="1218" y="1360" class="col">action_type</text>
+<text x="1505" y="1360" class="typ">VARCHAR(50)</text>
+<text x="1218" y="1394" class="col">message</text>
+<text x="1505" y="1394" class="typ">TEXT</text>
+<text x="1218" y="1428" class="col">status</text>
+<text x="1505" y="1428" class="typ">VARCHAR(30)</text>
+<text x="1218" y="1462" class="col">created_at</text>
+<text x="1505" y="1462" class="typ">TIMESTAMP</text>
+<rect x="1910" y="1175" width="500" height="236" rx="16" fill="#fff" stroke="#1d4ed8" stroke-width="3"/>
+<rect x="1910" y="1175" width="500" height="48" rx="16" fill="#cdd8f6" stroke="#1d4ed8" stroke-width="3"/>
+<line x1="1910" y1="1223" x2="2410" y2="1223" stroke="#1d4ed8" stroke-width="3"/>
+<text x="2160.0" y="1207" text-anchor="middle" class="head">ensemble_member</text>
+<rect x="1928" y="1233" width="40" height="25" rx="8" fill="#f59e0b"/>
+<text x="1948" y="1251" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PK</text>
+<text x="1980" y="1257" class="col">member_id</text>
+<text x="2225" y="1257" class="typ">BIGINT</text>
+<rect x="1928" y="1267" width="40" height="25" rx="8" fill="#8b5cf6"/>
+<text x="1948" y="1285" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FK</text>
+<text x="1980" y="1291" class="col">ensemble_id</text>
+<text x="2225" y="1291" class="typ">BIGINT</text>
+<rect x="1928" y="1301" width="40" height="25" rx="8" fill="#8b5cf6"/>
+<text x="1948" y="1319" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FK</text>
+<text x="1980" y="1325" class="col">model_id</text>
+<text x="2225" y="1325" class="typ">BIGINT</text>
+<text x="1938" y="1359" class="col">weight</text>
+<text x="2225" y="1359" class="typ">DOUBLE</text>
+<text x="1938" y="1393" class="col">prob</text>
+<text x="2225" y="1393" class="typ">DOUBLE</text>
+</svg>

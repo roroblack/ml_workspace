@@ -1,0 +1,126 @@
+erDiagram
+    model_registry ||--o{ prediction_log : "model_id FK"
+    model_registry ||--o{ recommendation : "model_id FK"
+    model_registry ||--o{ ensemble_member : "model_id FK recommended"
+    prediction_log ||--o{ retention_action_log : "prediction_id FK"
+    ensemble_result ||--o{ ensemble_member : "ensemble_id FK"
+
+    face_user ||..o{ prediction_log : "user_id logical"
+    face_user ||..o{ recommendation : "user_id logical"
+    face_user ||..o{ ensemble_result : "user_id logical"
+    face_user ||..o{ feature_user_snapshot : "user_id logical"
+    face_user ||..o{ sequence_snapshot : "user_id logical"
+    face_user ||..|| user_interest : "user_id logical"
+    face_user ||..o{ face_login_log : "user_id logical"
+
+    model_registry {
+        BIGINT model_id PK
+        VARCHAR_128 model_name UK
+        VARCHAR_32 model_type
+        VARCHAR_16 feature_schema_version
+        JSON preprocessing_config
+        TEXT dataset_path
+        TEXT artifact_path
+        VARCHAR_64 train_period
+        DOUBLE metric_cv
+        DOUBLE metric_oot
+        JSON metrics_json
+        TINYINT is_active
+        TIMESTAMP created_at
+    }
+
+    face_user {
+        VARCHAR_64 user_id PK
+        VARCHAR_100 display_name
+        VARCHAR_30 role
+        TIMESTAMP created_at
+    }
+
+    prediction_log {
+        BIGINT prediction_id PK
+        BIGINT model_id FK
+        VARCHAR_64 user_id
+        VARCHAR_128 session_id
+        DOUBLE churn_probability
+        VARCHAR_16 risk_level
+        JSON top_factors_json
+        TEXT recommended_action
+        TIMESTAMP created_at
+    }
+
+    feature_user_snapshot {
+        BIGINT snapshot_id PK
+        VARCHAR_64 user_id
+        TIMESTAMP snapshot_time
+        TINYINT cohort_flag
+        TINYINT churn
+        TINYINT churn_no_purchase
+        VARCHAR_64 obs_period
+        VARCHAR_64 outcome_period
+        JSON feature_json
+        TIMESTAMP created_at
+    }
+
+    sequence_snapshot {
+        BIGINT snapshot_id PK
+        VARCHAR_64 user_id
+        VARCHAR_32 dataset_tag
+        INT seq_len
+        INT n_features
+        VARCHAR_16 storage_format
+        TEXT artifact_path
+        INT row_index
+        INT label
+        TIMESTAMP created_at
+    }
+
+    user_interest {
+        VARCHAR_64 user_id PK
+        VARCHAR_64 top_category_id
+        VARCHAR_128 top_brand
+        JSON interest_json
+        TIMESTAMP updated_at
+    }
+
+    recommendation {
+        BIGINT rec_id PK
+        VARCHAR_64 user_id
+        BIGINT model_id FK
+        JSON rec_items_json
+        JSON rec_categories_json
+        TIMESTAMP created_at
+    }
+
+    ensemble_result {
+        BIGINT ensemble_id PK
+        VARCHAR_64 user_id
+        DOUBLE prob_ensemble
+        VARCHAR_16 risk_level
+        JSON improvement_json
+        TIMESTAMP created_at
+    }
+
+    ensemble_member {
+        BIGINT member_id PK
+        BIGINT ensemble_id FK
+        BIGINT model_id FK
+        DOUBLE weight
+        DOUBLE prob
+    }
+
+    retention_action_log {
+        BIGINT action_id PK
+        BIGINT prediction_id FK
+        VARCHAR_50 action_type
+        TEXT message
+        VARCHAR_30 status
+        TIMESTAMP created_at
+    }
+
+    face_login_log {
+        BIGINT login_id PK
+        VARCHAR_64 user_id
+        TINYINT success
+        DOUBLE similarity
+        TIMESTAMP created_at
+    }
