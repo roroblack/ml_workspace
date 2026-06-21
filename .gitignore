@@ -27,3 +27,9 @@
 *.mhtml
 *.pdf
 SKN32-2nd_GAJIMA_Dev/   # 별도 git repo(가지마) — 자체 커밋
+
+# 비밀/개인정보 — git 제외
+.env
+**/.env
+*.env
+!*.env.example
