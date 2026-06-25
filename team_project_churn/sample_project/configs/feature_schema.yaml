@@ -1,0 +1,13 @@
+# 피처/시퀀스 스키마 (build_features.py 산출물)
+tabular_features:        # data/processed/features.csv
+  - recency_days         # 마지막 활동~cutoff 일수(최근성)
+  - n_view
+  - n_cart
+  - n_purchase
+  - n_events
+  - active_days
+  - avg_price
+label: churn             # 1=이탈(결과기간 무활동), 0=유지
+sequence:                # data/processed/sequences.npz  X:[N, seq_len, 3]
+  shape: [n_users, 14, 3]
+  step_features: [view, cart, purchase]   # 일별 카운트

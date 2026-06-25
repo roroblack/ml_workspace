@@ -1,0 +1,27 @@
+threads=8 로딩...
+학습 시작 (bi=True, embed=128, hidden=128, MAX_LEN=200, lr=1e-3, 6ep)
+  [mean] ep1/6 test_acc 81.24% f1 81.01%
+  [mean] ep2/6 test_acc 84.14% f1 83.36%
+  [mean] ep3/6 test_acc 85.48% f1 85.33%
+  [mean] ep4/6 test_acc 85.58% f1 85.96%
+  [mean] ep5/6 test_acc 85.61% f1 86.02%
+  [mean] ep6/6 test_acc 85.56% f1 85.83%
+  -> [mean] best test_acc 85.61%
+     (mean 605s)
+  [meanmax] ep1/6 test_acc 80.84% f1 80.50%
+  [meanmax] ep2/6 test_acc 82.93% f1 81.22%
+  [meanmax] ep3/6 test_acc 86.16% f1 85.74%
+  [meanmax] ep4/6 test_acc 84.87% f1 83.60%
+  [meanmax] ep5/6 test_acc 85.91% f1 85.25%
+  [meanmax] ep6/6 test_acc 86.16% f1 86.04%
+  -> [meanmax] best test_acc 86.16%
+     (meanmax 644s)
+  [last] ep1/6 test_acc 54.34% f1 58.13%
+  [last] ep2/6 test_acc 51.19% f1 27.22%
+  [last] ep3/6 test_acc 53.28% f1 62.53%
+  [last] ep4/6 test_acc 60.00% f1 56.03%
+  [last] ep5/6 test_acc 64.08% f1 67.96%
+  [last] ep6/6 test_acc 51.03% f1 31.32%
+  -> [last] best test_acc 64.08%
+     (last 1768s)
+완료

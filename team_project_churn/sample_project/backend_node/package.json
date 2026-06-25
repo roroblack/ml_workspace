@@ -1,0 +1,21 @@
+{
+  "name": "gajima-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "가지마 운영 백엔드(Node). 19-1 클린아키. 추론 없음 — 레지스트리·평가 ingest·차트 API·예측 로그.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node scripts/check.js"
+  },
+  "optionalDependencies": {
+    "dotenv": "^16.6.1",
+    "fastify": "^4.28.1",
+    "mysql2": "^3.22.5",
+    "pg": "^8.12.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "note": "스켈레톤은 내장 http로 무설치 실행. MySQL/Neon은 .env 설정 시 활성. 운영 권고 서버=Fastify."
+}

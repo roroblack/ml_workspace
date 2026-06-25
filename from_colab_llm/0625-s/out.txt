@@ -1,0 +1,495 @@
+=== CODE 2 ===
+# gensim은 Word2Vec, FastText 등 단어 임베딩 모델을 만들고 불러올 때 사용하는 라이브러리입니다.
+!pip -q install gensim
+
+# JPype1은 KoNLPy가 Java 기반 형태소 분석기를 실행할 때 필요한 연결 라이브러리입니다.
+!pip -q install JPype1
+
+# konlpy는 한국어 형태소 분석을 수행하기 위한 라이브러리입니다.
+!pip -q install konlpy
+
+# gdown은 Google Drive 공유 파일을 Colab에서 다운로드할 때 사용하는 라이브러리입니다.
+!pip -q install gdown
+
+=== CODE 4 ===
+# os는 폴더 생성, 파일 존재 여부 확인, 경로 결합 등 운영체제 관련 작업에 사용합니다.
+import os
+
+# re는 정규표현식을 사용하여 특수문자 제거 같은 텍스트 정제 작업을 할 때 사용합니다.
+import re
+
+# zipfile은 압축 파일을 해제할 때 사용합니다.
+import zipfile
+
+# pandas는 CSV 파일을 읽고 표 형태의 데이터프레임으로 처리할 때 사용합니다.
+import pandas as pd
+
+# numpy는 숫자 배열 계산에 사용합니다.
+import numpy as np
+
+# Word2Vec은 문장 토큰 목록을 사용하여 단어 벡터 모델을 직접 학습할 때 사용합니다.
+from gensim.models import Word2Vec
+
+# KeyedVectors는 단어 벡터만 저장된 파일을 불러오거나 저장할 때 사용합니다.
+from gensim.models import KeyedVectors
+
+# Okt는 한국어 문장에서 명사, 동사, 형용사 등을 추출할 수 있는 형태소 분석기입니다.
+from konlpy.tag import Okt
+
+# files는 Colab에서 사용자의 PC 파일을 직접 업로드할 때 사용합니다.
+from google.colab import files
+
+=== CODE 6 ===
+# 데이터 파일을 저장할 폴더 이름을 지정합니다.
+DATA_DIR = '/content/data'
+
+# 모델 파일을 저장할 폴더 이름을 지정합니다.
+MODEL_DIR = '/content/models'
+
+# data 폴더가 없으면 새로 생성합니다.
+os.makedirs(DATA_DIR, exist_ok=True)
+
+# models 폴더가 없으면 새로 생성합니다.
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+# 생성된 폴더 경로를 화면에 출력하여 확인합니다.
+print('데이터 폴더:', DATA_DIR)
+print('모델 폴더:', MODEL_DIR)
+
+=== CODE 8 ===
+# news.csv 파일이 저장될 기본 경로를 지정합니다.
+news_path = os.path.join(DATA_DIR, 'news.csv')
+
+# news.csv 파일이 이미 있는지 확인합니다.
+if os.path.exists(news_path):
+    # 파일이 있으면 그대로 사용합니다.
+    print('기존 news.csv 파일을 사용합니다:', news_path)
+else:
+    # 파일이 없으면 사용자가 직접 업로드할지 선택할 수 있도록 안내합니다.
+    print('news.csv 파일이 없습니다. 파일 업로드 창에서 news.csv를 선택하세요.')
+    print('업로드하지 않아도 아래에서 실습용 예시 데이터가 자동 생성됩니다.')
+
+    try:
+        # 사용자의 PC에서 파일을 업로드합니다.
+        uploaded = files.upload()
+
+        # 업로드된 파일 목록을 하나씩 확인합니다.
+        for filename in uploaded.keys():
+            # 업로드된 파일명이 news.csv이면 data 폴더로 이동합니다.
+            if filename == 'news.csv':
+                # Colab 현재 경로에 업로드된 파일을 data 폴더 경로로 복사합니다.
+                os.replace(filename, news_path)
+                print('업로드한 news.csv 파일을 저장했습니다:', news_path)
+    except Exception as e:
+        # 업로드 과정에서 문제가 생겨도 실습용 예시 데이터를 만들 수 있도록 오류를 출력만 합니다.
+        print('파일 업로드를 건너뜁니다:', e)
+
+# 업로드 후에도 news.csv가 없으면 실습용 예시 데이터를 생성합니다.
+if not os.path.exists(news_path):
+    # 토픽별 예시 뉴스 문장을 리스트로 작성합니다.
+    sample_rows = [
+        {'category': 1, 'news': '인공지능 기술이 산업 현장에 적용되면서 데이터 분석과 자동화 시스템의 활용이 확대되고 있다.'},
+        {'category': 1, 'news': '머신러닝 모델은 대량의 데이터를 학습하여 예측 정확도를 높이고 다양한 업무를 지원한다.'},
+        {'category': 1, 'news': '생성형 인공지능은 문서 작성 번역 요약 코딩 지원 등 여러 분야에서 활용되고 있다.'},
+        {'category': 2, 'news': '프로야구 경기에서 투수의 호투와 타선의 집중력이 승부를 결정했다.'},
+        {'category': 2, 'news': '축구 대표팀은 빠른 패스와 압박 전술을 앞세워 경기 주도권을 잡았다.'},
+        {'category': 2, 'news': '올림픽 선수들은 체력 훈련과 전략 분석을 통해 경기력을 끌어올리고 있다.'},
+        {'category': 3, 'news': '주식 시장은 금리 인상 우려와 기업 실적 발표의 영향을 받아 변동성이 커졌다.'},
+        {'category': 3, 'news': '환율 상승은 수입 물가와 소비자 가격에 영향을 미칠 수 있다.'},
+        {'category': 3, 'news': '정부는 경기 회복을 위해 투자 확대와 일자리 지원 정책을 추진하고 있다.'},
+        {'category': 4, 'news': '병원은 환자 진료 데이터를 분석하여 맞춤형 치료와 예방 관리를 강화하고 있다.'},
+        {'category': 4, 'news': '신약 개발 과정에서 인공지능을 활용한 후보 물질 탐색이 주목받고 있다.'},
+        {'category': 4, 'news': '건강 관리를 위해 규칙적인 운동과 균형 잡힌 식습관이 중요하다.'},
+    ]
+
+    # 예시 데이터를 데이터프레임으로 변환합니다.
+    sample_df = pd.DataFrame(sample_rows)
+
+    # 예시 데이터를 news.csv 파일로 저장합니다.
+    sample_df.to_csv(news_path, index=False, encoding='utf-8-sig')
+
+    # 예시 데이터 생성 완료 메시지를 출력합니다.
+    print('실습용 예시 news.csv 파일을 생성했습니다:', news_path)
+
+# 최종적으로 사용할 news.csv 경로를 출력합니다.
+print('최종 news.csv 경로:', news_path)
+
+=== CODE 10 ===
+# news.csv 파일을 pandas 데이터프레임으로 읽습니다.
+df_news = pd.read_csv(news_path)
+
+# 데이터프레임의 상위 5개 행을 출력하여 데이터가 정상적으로 읽혔는지 확인합니다.
+display(df_news.head())
+
+# 데이터프레임의 컬럼 목록을 출력합니다.
+print('컬럼 목록:', df_news.columns.tolist())
+
+# news라는 컬럼이 있으면 해당 컬럼을 본문 컬럼으로 사용합니다.
+if 'news' in df_news.columns:
+    text_col = 'news'
+# news 컬럼이 없으면 문자열 데이터가 들어 있는 첫 번째 컬럼을 본문 컬럼으로 사용합니다.
+else:
+    text_col = df_news.select_dtypes(include='object').columns[0]
+
+# 실제로 사용할 본문 컬럼명을 출력합니다.
+print('본문으로 사용할 컬럼:', text_col)
+
+=== CODE 12 ===
+# 텍스트를 정제하는 함수를 정의합니다.
+def clean_text(text):
+    # 입력값이 비어 있거나 결측치이면 빈 문자열로 바꿉니다.
+    if pd.isna(text):
+        return ''
+
+    # 입력값을 문자열 자료형으로 변환합니다.
+    text = str(text)
+
+    # 한글, 영어, 숫자, 공백을 제외한 문자는 공백으로 바꿉니다.
+    text = re.sub(r'[^가-힣a-zA-Z0-9\s]', ' ', text)
+
+    # 여러 개의 공백을 하나의 공백으로 줄입니다.
+    text = re.sub(r'\s+', ' ', text)
+
+    # 문장 앞뒤의 불필요한 공백을 제거합니다.
+    text = text.strip()
+
+    # 정제된 텍스트를 반환합니다.
+    return text
+
+# 본문 컬럼에 정제 함수를 적용하여 cleaned 컬럼을 새로 만듭니다.
+df_news['cleaned'] = df_news[text_col].apply(clean_text)
+
+# 정제된 결과를 확인합니다.
+display(df_news[[text_col, 'cleaned']].head())
+
+=== CODE 14 ===
+# Okt 형태소 분석기 객체를 생성합니다.
+okt = Okt()
+
+# 불필요한 일반 단어를 제거하기 위한 불용어 집합을 정의합니다.
+stopwords = {'것', '수', '등', '및', '더', '이', '그', '저', '위해', '통해', '대한'}
+
+# 문장에서 명사를 추출하는 함수를 정의합니다.
+def extract_nouns(text):
+    # Okt 형태소 분석기로 문장에서 명사만 추출합니다.
+    nouns = okt.nouns(text)
+
+    # 한 글자 단어와 불용어를 제거합니다.
+    nouns = [word for word in nouns if len(word) > 1 and word not in stopwords]
+
+    # 정제된 명사 리스트를 반환합니다.
+    return nouns
+
+# 각 뉴스 문장에 명사 추출 함수를 적용하여 tokens 컬럼을 만듭니다.
+df_news['tokens'] = df_news['cleaned'].apply(extract_nouns)
+
+# 토큰 추출 결과를 확인합니다.
+display(df_news[['cleaned', 'tokens']].head())
+
+=== CODE 16 ===
+# 토큰이 2개 이상 있는 문장만 Word2Vec 학습에 사용합니다.
+sentences = [tokens for tokens in df_news['tokens'].tolist() if len(tokens) >= 2]
+
+# 학습 문장 수를 출력합니다.
+print('학습에 사용할 문장 수:', len(sentences))
+
+# 첫 번째 학습 문장을 출력하여 데이터 형태를 확인합니다.
+print('첫 번째 문장 토큰:', sentences[0] if sentences else '학습 가능한 문장이 없습니다.')
+
+=== CODE 18 ===
+# Word2Vec 모델을 학습합니다.
+# vector_size는 단어를 몇 차원의 벡터로 표현할지 결정합니다.
+# window는 중심 단어 주변 몇 개 단어까지 문맥으로 볼지 결정합니다.
+# min_count는 최소 등장 횟수이며, 여기서는 작은 실습 데이터도 학습하기 위해 1로 설정합니다.
+# workers는 병렬 처리에 사용할 CPU 작업 수입니다.
+# sg=1은 Skip-gram 방식, sg=0은 CBOW 방식을 의미합니다.
+trained_model = Word2Vec(
+    sentences=sentences,
+    vector_size=100,
+    window=5,
+    min_count=1,
+    workers=2,
+    sg=1,
+    epochs=100,
+    seed=42
+)
+
+# 직접 학습한 모델을 저장할 경로를 지정합니다.
+trained_model_path = os.path.join(MODEL_DIR, 'news_word2vec.model')
+
+# 학습된 Word2Vec 모델을 파일로 저장합니다.
+trained_model.save(trained_model_path)
+
+# 저장 완료 메시지를 출력합니다.
+print('직접 학습한 Word2Vec 모델 저장 완료:', trained_model_path)
+
+# 학습된 단어 수를 출력합니다.
+print('학습된 단어 수:', len(trained_model.wv.index_to_key))
+
+=== CODE 20 ===
+# 학습된 단어 목록 중 앞쪽 일부를 출력합니다.
+print('학습된 단어 예시:', trained_model.wv.index_to_key[:20])
+
+# 유사 단어를 확인할 기준 단어를 선택합니다.
+target_word = trained_model.wv.index_to_key[0]
+
+# 기준 단어와 가장 가까운 단어 5개를 출력합니다.
+print(f'[{target_word}]와 유사한 단어:')
+print(trained_model.wv.most_similar(target_word, topn=5))
+
+# 학습 단어가 2개 이상이면 두 단어의 코사인 유사도를 계산합니다.
+if len(trained_model.wv.index_to_key) >= 2:
+    # 첫 번째 단어를 선택합니다.
+    word1 = trained_model.wv.index_to_key[0]
+
+    # 두 번째 단어를 선택합니다.
+    word2 = trained_model.wv.index_to_key[1]
+
+    # 두 단어의 코사인 유사도를 계산합니다.
+    similarity = trained_model.wv.similarity(word1, word2)
+
+    # 유사도 결과를 출력합니다.
+    print(f'{word1} - {word2} 유사도:', similarity)
+
+=== CODE 22 ===
+# Google Drive 마운트를 사용할지 여부를 설정합니다.
+USE_GOOGLE_DRIVE = False
+
+# Google Drive 안의 ko.bin 파일 경로를 지정합니다.
+ko_bin_drive_path = '/content/drive/MyDrive/data/ko.bin'
+
+# Google Drive 사용 옵션이 True인 경우에만 Drive를 마운트합니다.
+if USE_GOOGLE_DRIVE:
+    # Colab에서 Google Drive를 연결하기 위한 모듈을 불러옵니다.
+    from google.colab import drive
+
+    # Google Drive를 /content/drive 경로에 연결합니다.
+    drive.mount('/content/drive', force_remount=True)
+
+    # 지정한 경로에 ko.bin 파일이 있는지 확인합니다.
+    print('ko.bin 존재 여부:', os.path.exists(ko_bin_drive_path))
+else:
+    # Drive를 사용하지 않는 경우 안내 메시지를 출력합니다.
+    print('현재는 Google Drive 사용을 끈 상태입니다. 사용하려면 USE_GOOGLE_DRIVE = True로 변경하세요.')
+
+=== CODE 24 ===
+# 로컬 업로드 방식으로 저장할 ko.bin 경로를 지정합니다.
+ko_bin_local_path = os.path.join(MODEL_DIR, 'ko.bin')
+
+# ko.bin 파일이 이미 models 폴더에 있는지 확인합니다.
+if os.path.exists(ko_bin_local_path):
+    # 이미 파일이 있으면 다시 업로드하지 않습니다.
+    print('기존 ko.bin 파일을 사용합니다:', ko_bin_local_path)
+else:
+    # 파일이 없으면 업로드 방식을 안내합니다.
+    print('ko.bin 파일이 없습니다. 필요하면 아래 files.upload() 주석을 해제하여 업로드하세요.')
+
+    # 아래 3줄은 실제 업로드가 필요할 때 주석을 해제해서 사용합니다.
+    # uploaded = files.upload()
+    # if 'ko.bin' in uploaded:
+    #     os.replace('ko.bin', ko_bin_local_path)
+
+# 최종 로컬 ko.bin 경로를 출력합니다.
+print('로컬 ko.bin 경로:', ko_bin_local_path)
+
+=== CODE 26 ===
+# gdown은 Google Drive 공유 파일을 다운로드할 때 사용합니다.
+import gdown
+
+# 공개 한국어 Word2Vec 모델 파일이 저장될 zip 경로를 지정합니다.
+ko_zip_path = os.path.join(MODEL_DIR, 'ko.zip')
+
+# 압축 해제 후 ko.bin이 저장될 경로를 지정합니다.
+ko_bin_download_path = os.path.join(MODEL_DIR, 'ko.bin')
+
+# 공개 Google Drive 파일 ID를 지정합니다.
+# 이 파일은 공개 한국어 Word2Vec 모델로 알려진 ko.zip 파일입니다.
+ko_file_id = '0B0ZXk88koS2KbDhXdWg1Q2RydlU'
+
+# gdown에서 사용할 다운로드 URL을 구성합니다.
+ko_download_url = f'https://drive.google.com/uc?id={ko_file_id}'
+
+# ko.bin 파일이 이미 있으면 다운로드하지 않습니다.
+if os.path.exists(ko_bin_download_path):
+    print('이미 ko.bin 파일이 존재합니다:', ko_bin_download_path)
+else:
+    try:
+        # Google Drive에서 ko.zip 파일을 다운로드합니다.
+        gdown.download(ko_download_url, ko_zip_path, quiet=False, fuzzy=True)
+
+        # 다운로드된 zip 파일이 실제로 존재하는지 확인합니다.
+        if os.path.exists(ko_zip_path):
+            # zip 파일을 열어 압축을 해제합니다.
+            with zipfile.ZipFile(ko_zip_path, 'r') as zip_ref:
+                # models 폴더에 압축을 풉니다.
+                zip_ref.extractall(MODEL_DIR)
+
+            # 압축 해제 후 파일 목록을 출력합니다.
+            print('압축 해제 후 models 폴더:', os.listdir(MODEL_DIR))
+        else:
+            # 다운로드가 실패한 경우 안내 메시지를 출력합니다.
+            print('ko.zip 다운로드에 실패했습니다. 수동 다운로드 후 업로드 방식을 사용하세요.')
+    except Exception as e:
+        # 다운로드 또는 압축 해제 중 오류가 발생하면 안내 메시지를 출력합니다.
+        print('자동 다운로드 중 오류가 발생했습니다:', e)
+        print('이 경우 12번 셀의 로컬 업로드 방식 또는 11번 셀의 Google Drive 방식을 사용하세요.')
+
+# 최종 ko.bin 존재 여부를 출력합니다.
+print('다운로드 방식 ko.bin 존재 여부:', os.path.exists(ko_bin_download_path))
+
+=== CODE 28 ===
+# 사전학습 모델 객체를 저장할 변수를 초기화합니다.
+pretrained_model = None
+
+# ko.bin 후보 경로를 리스트로 구성합니다.
+candidate_paths = [
+    ko_bin_local_path,
+    ko_bin_download_path,
+    ko_bin_drive_path,
+]
+
+# 실제 존재하는 ko.bin 경로만 필터링합니다.
+existing_paths = [path for path in candidate_paths if os.path.exists(path)]
+
+# 찾은 경로를 출력합니다.
+print('발견된 ko.bin 경로:', existing_paths)
+
+# ko.bin 파일이 하나 이상 있을 때만 로딩을 시도합니다.
+if existing_paths:
+    # 첫 번째로 발견된 ko.bin 파일을 사용합니다.
+    selected_path = existing_paths[0]
+
+    # 사용할 파일 경로를 출력합니다.
+    print('사용할 ko.bin 경로:', selected_path)
+
+    try:
+        # gensim Word2Vec 모델 형식으로 저장된 파일을 불러옵니다.
+        pretrained_model = Word2Vec.load(selected_path)
+
+        # Word2Vec 모델 형식으로 로딩 성공 메시지를 출력합니다.
+        print('Word2Vec.load 방식으로 로딩 성공')
+    except Exception as e1:
+        # Word2Vec.load 방식이 실패하면 오류를 출력합니다.
+        print('Word2Vec.load 실패:', e1)
+
+        try:
+            # word2vec 원본 binary 벡터 형식으로 저장된 파일을 불러옵니다.
+            kv = KeyedVectors.load_word2vec_format(selected_path, binary=True)
+
+            # KeyedVectors 객체를 pretrained_model에 저장합니다.
+            pretrained_model = kv
+
+            # KeyedVectors 방식 로딩 성공 메시지를 출력합니다.
+            print('KeyedVectors.load_word2vec_format(binary=True) 방식으로 로딩 성공')
+        except Exception as e2:
+            # binary=True 방식이 실패하면 오류를 출력합니다.
+            print('binary=True 로딩 실패:', e2)
+
+            try:
+                # 텍스트 벡터 형식으로 저장된 파일일 가능성을 고려하여 binary=False로 다시 시도합니다.
+                kv = KeyedVectors.load_word2vec_format(selected_path, binary=False)
+
+                # KeyedVectors 객체를 pretrained_model에 저장합니다.
+                pretrained_model = kv
+
+                # 텍스트 형식 로딩 성공 메시지를 출력합니다.
+                print('KeyedVectors.load_word2vec_format(binary=False) 방식으로 로딩 성공')
+            except Exception as e3:
+                # 모든 방식이 실패하면 오류를 출력합니다.
+                print('모든 로딩 방식 실패:', e3)
+else:
+    # ko.bin 파일을 찾지 못한 경우 안내 메시지를 출력합니다.
+    print('ko.bin 파일을 찾지 못했습니다. 직접 학습 모델을 사용하거나 ko.bin을 업로드하세요.')
+
+=== CODE 30 ===
+# 다양한 모델 객체에서 단어 벡터 저장소를 꺼내는 함수를 정의합니다.
+def get_vectors(model):
+    # 모델이 None이면 None을 반환합니다.
+    if model is None:
+        return None
+
+    # Word2Vec 모델은 wv 속성 안에 단어 벡터가 들어 있습니다.
+    if hasattr(model, 'wv'):
+        return model.wv
+
+    # KeyedVectors 객체는 그 자체가 단어 벡터 저장소입니다.
+    return model
+
+# 사전학습 모델의 벡터 저장소를 추출합니다.
+pretrained_vectors = get_vectors(pretrained_model)
+
+# 벡터 저장소가 있으면 단어 수를 출력합니다.
+if pretrained_vectors is not None:
+    print('사전학습 모델 단어 수:', len(pretrained_vectors.index_to_key))
+    print('사전학습 모델 단어 예시:', pretrained_vectors.index_to_key[:20])
+else:
+    print('사전학습 모델이 준비되지 않았습니다.')
+
+=== CODE 32 ===
+# 검색할 기준 단어를 지정합니다.
+query_word = '대회'
+
+# 사전학습 벡터가 준비되었고 기준 단어가 모델 어휘에 있는지 확인합니다.
+if pretrained_vectors is not None and query_word in pretrained_vectors:
+    # 기준 단어와 유사한 단어 10개를 검색합니다.
+    similar_words = pretrained_vectors.most_similar(query_word, topn=10)
+
+    # 검색 결과를 출력합니다.
+    print(f'[{query_word}]와 유사한 단어:')
+    for word, score in similar_words:
+        print(word, score)
+else:
+    # 모델이 없거나 단어가 없을 때 안내 메시지를 출력합니다.
+    print(f'사전학습 모델이 없거나 [{query_word}] 단어가 모델 어휘에 없습니다.')
+    print('이 경우 9번 셀의 직접 학습 모델로 실습을 진행하세요.')
+
+=== CODE 34 ===
+# 유사도를 비교할 첫 번째 단어를 지정합니다.
+word_a = '대회'
+
+# 유사도를 비교할 두 번째 단어를 지정합니다.
+word_b = '올림픽'
+
+# 사전학습 벡터가 준비되었고 두 단어가 모두 어휘에 있는지 확인합니다.
+if pretrained_vectors is not None and word_a in pretrained_vectors and word_b in pretrained_vectors:
+    # 두 단어의 코사인 유사도를 계산합니다.
+    score = pretrained_vectors.similarity(word_a, word_b)
+
+    # 유사도 결과를 출력합니다.
+    print(f'{word_a} - {word_b} 유사도:', score)
+else:
+    # 모델이 없거나 단어가 없을 때 안내 메시지를 출력합니다.
+    print('사전학습 모델이 없거나 비교 단어가 모델 어휘에 없습니다.')
+
+=== CODE 36 ===
+# 비교할 단어를 지정합니다.
+compare_word = '인공지능'
+
+# 직접 학습 모델에 비교 단어가 있는지 확인합니다.
+if compare_word in trained_model.wv:
+    # 직접 학습 모델의 유사 단어를 출력합니다.
+    print('[직접 학습 모델] 유사 단어')
+    print(trained_model.wv.most_similar(compare_word, topn=5))
+else:
+    # 직접 학습 모델에 단어가 없을 때 안내합니다.
+    print('[직접 학습 모델] 해당 단어가 없습니다:', compare_word)
+
+# 사전학습 모델이 준비되었고 비교 단어가 있는지 확인합니다.
+if pretrained_vectors is not None and compare_word in pretrained_vectors:
+    # 사전학습 모델의 유사 단어를 출력합니다.
+    print('\n[사전학습 모델] 유사 단어')
+    print(pretrained_vectors.most_similar(compare_word, topn=5))
+else:
+    # 사전학습 모델에 단어가 없거나 모델이 없을 때 안내합니다.
+    print('\n[사전학습 모델] 모델이 없거나 해당 단어가 없습니다:', compare_word)
+
+=== CODE 38 ===
+# 단어 벡터만 저장할 파일 경로를 지정합니다.
+vector_path = os.path.join(MODEL_DIR, 'news_word2vec_vectors.txt')
+
+# 직접 학습한 모델의 단어 벡터를 텍스트 형식으로 저장합니다.
+trained_model.wv.save_word2vec_format(vector_path, binary=False)
+
+# 저장 결과를 출력합니다.
+print('단어 벡터 파일 저장 완료:', vector_path)
+

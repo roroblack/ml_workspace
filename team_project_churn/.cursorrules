@@ -1,0 +1,18 @@
+# team_project_churn rules
+
+- **CONFIRMED (2026-06-19): the dataset is REES46 — final and fixed. Use REES46 only; no other dataset for any final model/report/demo.**
+- Final project data source is REES46 only.
+- Two REES46 artifacts exist — do not confuse them in reports:
+  - **Canonical training set** (rules §3): `retail_rees46_multi/data/{tabular.csv, seq.npz, split.npz}` — 5 months (2019-10~2020-02), 80,000 users, 18-week sequences. Use this for the FINAL ML/DL churn model.
+  - **Real-time/granularity demo derivative**: `team_project_churn/sample_project/` — REES46 **2019-Nov only, 8,000-user sample, raw second-level events** (needed because canonical weekly aggregates can't support second-level/session analysis). Used by reports 17-x. It IS REES46 (not synthetic), but reports MUST label it "REES46 2019-Nov 표본(sample_project)" and must NOT present it as the canonical training set.
+- `sample_project/src/run_pipeline.py` defaults to REES46 (ingest_rees46) and never silently falls back to synthetic. The synthetic `generate_sample_data` is demo-only; invoke it only with explicit `synthetic`/`demo` arg, and never call it a final/REES46 result.
+- Do not use Bank Customer Churn / Churn_Modelling.csv for final model training, validation, realtime prediction, dashboard, or recommendation.
+- Do not introduce Telco, Mobile Game, Online Retail, or external item metadata into active final-model code unless explicitly marked as archive/reference.
+- Active REES46 5-month preprocessed data:
+  - `retail_rees46_multi/data/tabular.csv`
+  - `retail_rees46_multi/data/seq.npz`
+  - `retail_rees46_multi/data/split.npz`
+  - `retail_rees46_multi/data/rees46_multi_preprocessed_5months.zip`
+- Recommendation features must use REES46 fields only: `user_id`, `event_time`, `event_type`, `product_id`, `category_id`, `category_code`, `brand`, `price`, `user_session`.
+- Face login is authentication/authorization only; it is not training data for the churn model.
+- For full project rules, read `PROJECT_RULES.md` first.

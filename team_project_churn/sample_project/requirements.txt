@@ -1,0 +1,9 @@
+# 샘플 실행 필수
+numpy
+pandas
+scikit-learn
+torch
+joblib
+streamlit
+# 선택: 실제 Neon(Postgres) 사용 시
+# psycopg[binary]

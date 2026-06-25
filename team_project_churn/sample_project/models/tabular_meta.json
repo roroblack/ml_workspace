@@ -1,0 +1,24 @@
+{
+  "feat_cols": [
+    "recency_days",
+    "n_view",
+    "n_cart",
+    "n_purchase",
+    "n_events",
+    "active_days",
+    "avg_price"
+  ],
+  "best": "LogReg",
+  "metrics": {
+    "LogReg": {
+      "auc": 0.8687,
+      "f1": 0.8269,
+      "recall": 0.7288
+    },
+    "GBM": {
+      "auc": 0.8636,
+      "f1": 0.9011,
+      "recall": 0.9424
+    }
+  }
+}

@@ -35,6 +35,18 @@ models:
   lstm:
     framework: torch
     task_types: [classification, regression, time_series]
+  rnn:
+    framework: torch
+    task_types: [classification, regression, time_series]
+  gru:
+    framework: torch
+    task_types: [classification, regression, time_series]
+  attention_lstm:
+    framework: torch
+    task_types: [classification, regression, time_series]
+  transformer:
+    framework: torch
+    task_types: [classification, regression, time_series]
   apriori:
     framework: special
     task_types: [association_rules]

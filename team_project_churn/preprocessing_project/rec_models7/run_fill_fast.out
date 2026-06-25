@@ -1,0 +1,11 @@
+>>> RUN  item/DecisionTree trials=8 16:52:29
+RESULTREC	item	DecisionTree	top1=0.0938	top5=0.1754	MRR=0.1362	ES0	none|none	(48s)
+>>> RUN  cat/RandomForest trials=5 16:53:22
+RESULTREC	cat	RandomForest	top1=0.1121	top5=0.2821	MRR=0.2042	ES0	standard|none	(177s)
+>>> RUN  item/RandomForest trials=5 16:56:22
+RESULTREC	item	RandomForest	top1=0.1028	top5=0.1921	MRR=0.1501	ES0	standard|none	(223s)
+>>> RUN  cat/LogReg trials=6 17:00:22
+RESULTREC	cat	LogReg	top1=0.0753	top5=0.2253	MRR=0.1600	ES0	minmax|none	(849s)
+>>> RUN  item/LogReg trials=6 17:14:40
+    FAIL rc=127 -> logs/item_LogReg.log
+=== FAST DONE 17:16:47 ===

@@ -1,0 +1,11 @@
+# 모델 하이퍼파라미터 (참고용 — 샘플 코드는 config.py/스크립트 기본값 사용)
+seed: 42
+tabular:
+  logreg: {max_iter: 1000, class_weight: balanced}
+  gbm: {random_state: 42}
+sequence:
+  lstm: {hidden: 32, dropout: 0.3, epochs: 25, lr: 0.001, batch_size: 128, weight_decay: 0.0001}
+  # 확장: transformer {d_model: 32, n_heads: 4, num_layers: 2}
+eval:
+  primary_metric: roc_auc
+  test_size: 0.2

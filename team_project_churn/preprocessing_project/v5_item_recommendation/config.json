@@ -1,0 +1,23 @@
+{
+  "task": "next_product_prediction",
+  "default_input": "sample_project/data/raw/events.csv",
+  "window_size": 10,
+  "target_products": 50,
+  "max_windows": 20000,
+  "test_size": 0.25,
+  "seed": 42,
+  "metrics": ["top1", "hit10", "mrr10"],
+  "models": [
+    "Popularity",
+    "LastProduct",
+    "LastCategoryPopularity",
+    "LogisticRegression",
+    "SGDLogistic",
+    "RidgeClassifier",
+    "ComplementNB",
+    "DecisionTree",
+    "RandomForest",
+    "ExtraTrees",
+    "LightGBM"
+  ]
+}

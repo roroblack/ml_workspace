@@ -1,0 +1,8 @@
+# 실시간 예측/시퀀스 파라미터 (config.py와 일치)
+observation_days: 14      # 시퀀스 길이(SEQ_LEN)
+outcome_days: 7           # 결과기간(무활동=이탈)
+event_types: [view, cart, purchase]
+recent_event_limit: 500
+risk_thresholds:
+  low: 0.35               # < low = low
+  high: 0.65              # >= high = high, 사이는 medium

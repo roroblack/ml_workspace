@@ -1,0 +1,52 @@
+device=cpu threads=8 subset=10000
+
+===== C1_baseline =====
+  [C1_baseline] ep1/10 g 2.858 d 0.585 D(real) 0.807 D(fake) 0.224
+  [C1_baseline] ep2/10 g 1.668 d 0.751 D(real) 0.722 D(fake) 0.269
+  [C1_baseline] ep3/10 g 1.785 d 0.646 D(real) 0.751 D(fake) 0.247
+  [C1_baseline] ep4/10 g 2.147 d 0.472 D(real) 0.812 D(fake) 0.188
+  [C1_baseline] ep5/10 g 2.316 d 0.461 D(real) 0.825 D(fake) 0.176
+  [C1_baseline] ep6/10 g 2.092 d 0.559 D(real) 0.789 D(fake) 0.210
+  [C1_baseline] ep7/10 g 1.891 d 0.664 D(real) 0.758 D(fake) 0.241
+  [C1_baseline] ep8/10 g 1.878 d 0.636 D(real) 0.766 D(fake) 0.236
+  [C1_baseline] ep9/10 g 1.814 d 0.727 D(real) 0.745 D(fake) 0.258
+  [C1_baseline] ep10/10 g 1.820 d 0.713 D(real) 0.751 D(fake) 0.248
+  -> [C1_baseline] 781s | G params 1,911,232 D params 431,872 | 이미지 c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\C1_baseline.png
+
+===== C2_batch64 =====
+  [C2_batch64] ep1/6 g 2.346 d 0.636 D(real) 0.779 D(fake) 0.234
+  [C2_batch64] ep2/6 g 1.986 d 0.576 D(real) 0.777 D(fake) 0.223
+  [C2_batch64] ep3/6 g 2.484 d 0.416 D(real) 0.839 D(fake) 0.158
+  [C2_batch64] ep4/6 g 2.072 d 0.607 D(real) 0.777 D(fake) 0.219
+  [C2_batch64] ep5/6 g 2.011 d 0.656 D(real) 0.767 D(fake) 0.233
+  [C2_batch64] ep6/6 g 1.925 d 0.650 D(real) 0.766 D(fake) 0.234
+  -> [C2_batch64] 646s | G params 1,911,232 D params 431,872 | 이미지 c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\C2_batch64.png
+
+===== C3_channels128 =====
+  [C3_channels128] ep1/6 g 4.197 d 0.855 D(real) 0.782 D(fake) 0.243
+  [C3_channels128] ep2/6 g 1.846 d 0.773 D(real) 0.734 D(fake) 0.268
+  [C3_channels128] ep3/6 g 2.107 d 0.542 D(real) 0.795 D(fake) 0.206
+  [C3_channels128] ep4/6 g 2.559 d 0.370 D(real) 0.856 D(fake) 0.144
+  [C3_channels128] ep5/6 g 2.494 d 0.592 D(real) 0.806 D(fake) 0.194
+  [C3_channels128] ep6/6 g 2.185 d 0.645 D(real) 0.775 D(fake) 0.223
+  -> [C3_channels128] 1053s | G params 5,133,184 D params 1,715,712 | 이미지 c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\C3_channels128.png
+
+===== C4_lr1e-4 =====
+  [C4_lr1e-4] ep1/6 g 2.532 d 0.377 D(real) 0.871 D(fake) 0.177
+  [C4_lr1e-4] ep2/6 g 2.121 d 0.530 D(real) 0.798 D(fake) 0.204
+  [C4_lr1e-4] ep3/6 g 1.809 d 0.596 D(real) 0.770 D(fake) 0.231
+  [C4_lr1e-4] ep4/6 g 1.808 d 0.550 D(real) 0.778 D(fake) 0.221
+  [C4_lr1e-4] ep5/6 g 2.032 d 0.463 D(real) 0.814 D(fake) 0.189
+  [C4_lr1e-4] ep6/6 g 2.340 d 0.349 D(real) 0.856 D(fake) 0.145
+  -> [C4_lr1e-4] 430s | G params 1,911,232 D params 431,872 | 이미지 c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\C4_lr1e-4.png
+
+===== C5_D_too_strong =====
+  [C5_D_too_strong] ep1/6 g 5.358 d 0.321 D(real) 0.851 D(fake) 0.029
+  [C5_D_too_strong] ep2/6 g 2.846 d 0.353 D(real) 0.852 D(fake) 0.089
+  [C5_D_too_strong] ep3/6 g 3.654 d 0.249 D(real) 0.928 D(fake) 0.090
+  [C5_D_too_strong] ep4/6 g 3.900 d 0.157 D(real) 0.949 D(fake) 0.066
+  [C5_D_too_strong] ep5/6 g 3.859 d 0.138 D(real) 0.952 D(fake) 0.065
+  [C5_D_too_strong] ep6/6 g 3.213 d 0.374 D(real) 0.885 D(fake) 0.104
+  -> [C5_D_too_strong] 604s | G params 1,911,232 D params 431,872 | 이미지 c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\C5_D_too_strong.png
+
+완료. metrics -> c:\Users\playdata2\Documents\ml_workspace\from_colab_deep_learning\0616-s\dcgan_experiments\metrics.json

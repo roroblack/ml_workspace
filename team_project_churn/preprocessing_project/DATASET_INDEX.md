@@ -5,6 +5,7 @@
 | v1_daily | 배포본 일별14 | (sample_project) | 정본 위치 |
 | v2_5m | 5개월 10피처·7모델 | 96MB | output/OUTPUT_INDEX.md |
 | v3_event_additive | 이벤트시퀀스 추가형 | (processed_eventseq) | output/ |
+| v5_item_recommendation | 다음 상품(product_id) 예측 fast benchmark | sample raw 97,659 rows | output/benchmark_* |
 | legacy_onlineretail | 온라인리테일(UCI) 이탈 | 0.8MB | 복사 |
 | legacy_rees46_cosmetics | REES46 화장품 단월 이탈 | 122.5MB | 복사 |
 | legacy_rees46_multi | REES46 다개월 시퀀스 이탈 | 27.1MB | 복사 |

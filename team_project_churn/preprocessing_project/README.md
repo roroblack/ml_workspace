@@ -9,6 +9,7 @@
 | **v2_5m** | `v2_5m/` | 5개월 풀+코호트+7모델 10피처·주별 | churn+no_purchase | **output/processed_5m/(96M)** | 완료 |
 | **v3_event_additive** | `v3_event_additive/` | 이벤트 시퀀스(실시간) 추가형 | churn | output/processed_eventseq/ | 완료 |
 | **v4_model_prep** | `v4_model_prep/` | **모델별 전처리(하나씩) — 모델별 폴더** | churn | output/<Model>/ | 진행 중 |
+| **v5_item_recommendation** | `v5_item_recommendation/` | 상품목록 기반 다음 product_id 예측 | next_product_id | output/benchmark_* | fast benchmark 완료 |
 | legacy_* / aux_* | 8폴더 | 과거 작업(온라인리테일·REES46 단/다월·라벨·게임·세션·다음카테고리·추천) | 각종 | output/(물리 백업) | 보존 |
 
 > **데이터셋 백업 원칙(유실 복원)**: 각 버전 `output/`에 전처리 **결과 데이터셋을 물리 복사**해 둔다(`backup_datasets.py`로 일괄). 총 ~386M. 마스터 목록 `DATASET_INDEX.md`.

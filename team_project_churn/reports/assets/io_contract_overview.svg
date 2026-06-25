@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" font-family="Segoe UI, sans-serif">
+  <style>
+    .t{font-size:15px;font-weight:700;fill:#0f172a}
+    .s{font-size:11px;fill:#475569}
+    .arr{stroke-width:2;fill:none}
+    .lbl{font-size:10.5px;fill:#334155;font-weight:600}
+    .badge{font-size:10px;fill:#fff;font-weight:700}
+  </style>
+  <defs>
+    <marker id="bl" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3b82f6"/></marker>
+    <marker id="gr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#22c55e"/></marker>
+    <marker id="or" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f97316"/></marker>
+  </defs>
+
+  <!-- center server -->
+  <rect x="380" y="200" width="220" height="120" rx="12" fill="#0f172a"/>
+  <text class="t" x="408" y="232" fill="#fff">FastAPI 백엔드 :8090</text>
+  <text class="s" x="408" y="254" fill="#cbd5e1">서빙·변환만 (학습 안 함)</text>
+  <text class="s" x="408" y="274" fill="#cbd5e1">실시간 추론 · 차트 · 정책</text>
+  <text class="s" x="408" y="294" fill="#cbd5e1">단일 소스(Churn Rate)</text>
+
+  <!-- model team (left) -->
+  <rect x="40" y="220" width="200" height="80" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+  <text class="t" x="62" y="250">① 모델팀 (src/)</text>
+  <text class="s" x="62" y="270">학습·평가 산출물</text>
+  <text class="s" x="62" y="288">19-8 계약</text>
+
+  <!-- dashboard (top) -->
+  <rect x="390" y="40" width="200" height="80" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+  <text class="t" x="412" y="70">② 대시보드 :8501</text>
+  <text class="s" x="412" y="90">Streamlit · 운영/진단</text>
+  <text class="s" x="412" y="108">19-9 계약</text>
+
+  <!-- sim (bottom) -->
+  <rect x="390" y="400" width="200" height="80" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text class="t" x="412" y="430">③ 시뮬 사이트 :3000</text>
+  <text class="s" x="412" y="450">React · 이커머스</text>
+  <text class="s" x="412" y="468">19-10 계약</text>
+
+  <!-- stores (right) -->
+  <rect x="740" y="150" width="200" height="60" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text class="t" x="762" y="178">MySQL · 파일(models/·data/)</text>
+  <text class="s" x="762" y="196">예측로그 · parquet·번들</text>
+
+  <!-- ① model -> server (file drop + submit) -->
+  <path class="arr" d="M240,255 L380,255" stroke="#eab308" marker-end="url(#or)"/>
+  <text class="lbl" x="250" y="245" fill="#a16207">파일드롭 · POST /models/submit</text>
+
+  <!-- ② dashboard <-> server (api-key, envelope) -->
+  <path class="arr" d="M470,120 L480,200" stroke="#22c55e" marker-end="url(#gr)"/>
+  <path class="arr" d="M510,200 L500,120" stroke="#22c55e" marker-end="url(#gr)"/>
+  <text class="lbl" x="520" y="160" fill="#15803d">X-API-Key · 봉투</text>
+  <text class="s" x="520" y="176" fill="#15803d">/predict/diagnose · /churn-policy</text>
+  <text class="s" x="520" y="190" fill="#15803d">/sim/user-score · /dashboard/*</text>
+
+  <!-- ③ sim <-> server (raw /api/*) -->
+  <path class="arr" d="M470,400 L480,320" stroke="#3b82f6" marker-end="url(#bl)"/>
+  <path class="arr" d="M510,320 L500,400" stroke="#3b82f6" marker-end="url(#bl)"/>
+  <text class="lbl" x="200" y="395" fill="#1d4ed8">raw /api/* · 무인증</text>
+  <text class="s" x="160" y="411" fill="#1d4ed8">/api/churn/predict · /api/events</text>
+  <text class="s" x="160" y="425" fill="#1d4ed8">/api/catalog/* · /api/active-user</text>
+
+  <!-- server -> stores -->
+  <path class="arr" d="M600,230 L740,190" stroke="#f97316" marker-end="url(#or)"/>
+  <text class="lbl" x="618" y="200" fill="#c2410c">저장·읽기</text>
+
+  <!-- title -->
+  <text x="40" y="28" font-size="17" font-weight="800" fill="#0f172a">GAJIMA 최종 I/O 계약 개요 — 서버 중심 3 경계</text>
+</svg>

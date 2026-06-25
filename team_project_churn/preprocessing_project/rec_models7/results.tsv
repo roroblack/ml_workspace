@@ -1,0 +1,12 @@
+dataset	model	result
+RESULTREC	item	XGBoost	top1=0.1090	top5=0.1884	MRR=0.1554	ES19	standard|none	(249s)
+RESULTREC	item	DecisionTree	top1=0.0938	top5=0.1754	MRR=0.1362	ES0	none|none	(48s)
+RESULTREC	item	LightGBM	top1=0.0373	top5=0.1237	MRR=0.0849	ES1	standard|none	(196s)
+RESULTREC	cat	RandomForest	top1=0.1121	top5=0.2821	MRR=0.2042	ES0	standard|none	(177s)
+RESULTREC	item	RandomForest	top1=0.1028	top5=0.1921	MRR=0.1501	ES0	standard|none	(223s)
+RESULTREC	cat	LogReg	top1=0.0753	top5=0.2253	MRR=0.1600	ES0	minmax|none	(849s)
+RESULTREC	cat	XGBoost	top1=0.1341	top5=0.2923	MRR=0.2209	ES50	none|classweight	(332s)
+RESULTREC	cat	CatBoost	top1=0.0915	top5=0.2486	MRR=0.1791	ES39	standard|none	(614s)
+RESULTREC	item	CatBoost	top1=0.0469	top5=0.1179	MRR=0.0909	ES39	standard|none	(1993s)
+RESULTREC	item	Transformer	top1=0.0590	top5=0.1294	MRR=0.1009	(227s)
+RESULTREC	item	LogReg	top1=0.0491	top5=0.0979	MRR=0.0825	ES0	minmax|none	(149s)

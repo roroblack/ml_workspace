@@ -33,3 +33,6 @@ SKN32-2nd_GAJIMA_Dev/   # 별도 git repo(가지마) — 자체 커밋
 **/.env
 *.env
 !*.env.example
+
+.venv/
+.venv_shap/
