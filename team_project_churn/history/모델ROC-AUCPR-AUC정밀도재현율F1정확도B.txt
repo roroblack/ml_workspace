@@ -1,3 +1,57 @@
+현재 가동 상태
+구성	상태
+백엔드 8090	UP
+cloudflared 터널	UP (Vercel용)
+로컬 시뮬 3000	UP (로컬 확인용)
+
+
+---------------------------
+
+다음 단계 — Vercel에 연결 (사용자가 진행)
+Vercel → 프로젝트(gajimasimul) → Settings → Environment Variables
+VITE_FASTAPI_URL = https://springfield-hampshire-roman-example.trycloudflare.com 추가/수정 (Production)
+Redeploy (env는 빌드 타임 주입이라 재배포 필요)
+→ 재배포되면 gajimasimul.vercel.app 사용자가 담거나 조회할 때 우리 백엔드로 가서 이탈확률 + 액션(SNS/할인/연관추천) 이 뜹니다.
+
+⚠ 꼭 알아둘 것
+항목	내용
+URL 휘발성	quick tunnel은 cloudflared 끄면 URL이 바뀝니다. 재시작 시 새 URL → Vercel env 다시 갱신. 고정하려면 Cloudflare 계정 + named tunnel.
+PC 켜둠	내 PC에서 백엔드(8090) + cloudflared 둘 다 떠 있어야 함. 지금 둘 다 가동 중.
+무계정 한계	가동시간 보장 없음(데모용으론 충분).
+CORS	백엔드 allow_origins=["*"] → Vercel 호출 허용 ✅
+현재 가동 상태
+백엔드: 8090 (UP)
+cloudflared 터널: springfield-hampshire-roman-example.trycloudflare.com → localhost:8090 (UP)
+-------------------------------------------------------------
+올바른 위치로 가세요
+이 "Create Environment" 화면은 그냥 취소/뒤로 하고:
+
+Vercel → 프로젝트(gajimasimul) → Settings → 왼쪽 메뉴 Environment Variables (←"Environments" 아님!)
+Add New / Add Another 클릭
+칸이 2개로 나뉩니다:
+Key(또는 Name): VITE_FASTAPI_URL
+Value: https://springfield-hampshire-roman-example.trycloudflare.com
+Environments 체크박스: Production 체크(원하면 Preview·Development도)
+Save
+→ Deployments 탭 → 최신 배포 ⋯ → Redeploy (env는 빌드타임 주입이라 재배포 필요)
+
+-----------------------------------------------------------------------------------------------
+
+
+그래서 추천에서 category_id가 들어오면
+이름은 못 보여줍니다(데이터에 없음). 대신 그 카테고리의 top_brand + price_median + 상품수로 설명하거나, 그 안의 대표 상품(인기순) 을 보여주는 게 현실적입니다.
+지금 백엔드 /api/recommendations도 그렇게 동작합니다: 유사 category_id → 그 카테고리의 상품 1개를 꺼내 {product_id, brand, price, reason:"유사 카테고리(코사인 …)"} 로 반환.
+보기 좋게 하려면 (선택지)
+브랜드+가격대로 라벨 — "bpw.style · ~1.3 가격대 (3,503개 상품)" 식. 데이터로 즉시 가능.
+대표 상품으로 노출 — 이름 대신 그 카테고리 인기 상품 이미지/가격. (추천 UX엔 이게 더 자연스러움)
+상위 N개 카테고리에 수동 이름 부여 — 발표용으로 자주 나오는 category_id 10~20개에 "립스틱/스킨케어" 등 수동 매핑 테이블(category_name_manual.csv)을 만들어 join. 정확하진 않지만 발표 가독성↑.
+→ 정리: category_id → (브랜드/가격/상품수/유사카테고리/상품) 매핑은 되는데, 사람이 읽는 카테고리명은 REES46 화장품에 없어서 category_{id} 자리표시자만 나옵니다. 발표용이면 위 1·2번(브랜드+가격 또는 대표상품)으로 표시하길 권장합니다.
+
+원하시면 추천 응답에 top_brand·price_median·상품수를 같이 실어 프론트가 "이름 대신" 그걸 보여주게 백엔드를 보강하고, 자주 나오는 카테고리 수동 이름 매핑 스캐폴드도 만들어 드릴까요?
+
+------------------------------------------------------------------------------------------------
+
+
 구조 -
 -서로 임베딩된 해쉬키값 가지고 서버-시뮬사이트서버 연결
 
